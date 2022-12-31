@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/sfx_sounds_high2.wav-8e05f7e35bd5e3583574c056fbb2eb58.sample"
+
+[deps]
+
+source_file="res://Assets/The Essential Retro Video Game Sound Effects Collection [512 sounds] By Juhani Junkala/General Sounds/High Pitched Sounds/sfx_sounds_high2.wav"
+dest_files=[ "res://.import/sfx_sounds_high2.wav-8e05f7e35bd5e3583574c056fbb2eb58.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

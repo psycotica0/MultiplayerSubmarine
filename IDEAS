@@ -1,0 +1,134 @@
+The idea here is that a bunch of players all run around this submarine
+accomplishing various tasks to get to the goal.  The primary goal may be to boat
+the boat through some sort of maze or something to get to a goal. To get there
+we may need to avoid walls, or mines. We may have to blow up mines if we don't
+want to or can't avoid them. There may also be gates we have to blow through, or
+enemies to kill along the way.
+
+So that's the gist. The rub is that we have very limited fuel. We require both
+right and left balast buffer to be inflated, and we require coal in our coal
+hoppper to power our engine. This means we'll have to have someone periodically
+checking on those and pumping them up, shoveling coal, etc. or I won't be able
+to turn left, right, or go forward anymore.
+
+So we're running around inside the boat, but outside the walls we can just see
+the things that are right there, but when we interact with the helm we can see
+what's in our immediate area outside the boat and can set the helm and throttle.
+
+I think our controls there should have momentum rather than be arcade-style, and
+if we don't stop the throttle before leaving the helm it'll just continue
+forward until it runs out of coal. (or hits something)
+
+When someone goes to interact with the ballast tank I think it should be a
+linear up and down bar timing game. The visual action is filling a tank with,
+like, a bike pump. The more full the tank is, the smaller the "add 1" part is,
+so it's easy to fill an empty tank to half, but harder to get the last half. I
+think the top of the bar is a constant but tiny "fill" area that instantly fills
+the tank. These start slow so it's easier to hit the area, but you have to
+constantly wait for it to get into the sweet spot. Later upgrades can be spent
+to increase the rate which means you don't have to wait so long between hits,
+but it's harder to hit the zone.
+
+Filling the coal hopper I think will be a similar timing minigame, but a circle
+that just goes around and around. The animation will be shoveling from a pile
+into the hopper.
+
+So those are what keeps the machine going, and you only win by driving the boat
+to wherever you need to go. But you may have to often leave the helm to refuel,
+etc.
+
+But there's other stuff. Torpedos need to be assembled and then loaded into the
+torpedo bays. Then there's a delay while the bay fills before you can launch it.
+That means it can be advantageous to have someone spending downtime loading a
+torpedo bay even if there's nothing to shoot because if it's already armed then
+when we *do* need to shoot, it's instant. Shooting is probably done with a
+button next to the torpedo bay.
+
+Assembling the torpedo is maybe some kind of minigame involving picking blocks
+with symbols on the edge and trying to pick the one that best matches the
+surroundings or something.
+
+The thing I like about this is that it could be someone's job to assemble the
+torpedos, load them, and fire them. That'd be fine. But it could also be
+someone's job to assemble them, and someone else's job to carry them to the tube
+and load them. That's up to the team! It could also make sense to have 3 stacked
+up by each bay during quiet times, and then no more until those are fired, etc.
+
+When the boat takes a hit the wall cracks where it got hit, and that room may
+start taking in water. A player needs to grab some Filly Putty to patch that up,
+and may require some kind of breathing apparatus if the room is full enough,
+otherwise it may just make movement slower. You can seal the doors between rooms
+to contain the water if you're not in a good place to fix it right now, but that
+basically guarantees you'll need breathing shit later.
+
+Filly Putty is in a box, but it takes a bit of time to get out of the box, so it
+can be a good idea to get some out and ready in advance if you've got a minute
+to spare.
+
+Some enemies will fly into the side of the boat, pierce the hull, and board.
+These enemies can be smacked to stop them from wrecking stuff from the inside.
+Anyone can smack baddies, but if you're using the smacking stick it's much more
+effective.
+The fixing wrench can be fetched to allow you to fix the busted components.
+
+There's also a map which shows a static map of the whole area, with no
+indication of where you are on it or what you might find there. Basically just
+terrain. The periscope, on the other hand, gives you a much more zoomed out
+view, but you can't pilot while looking through it. So you can use the periscope
+to figure out where you are, the map to figure out where you're going, and then
+the helm to actually drive. But using the periscope from time to time would be
+useful to get an idea of what you're heading into before you're ready.
+
+Between levels you can use the points you accumulated to do lots of stuff. You
+can add new rooms with new tools, like the breathing shit, the map, the
+periscope, the Filly Putty, or even just empty rooms to use as armour /
+bulkheads.
+
+You can also, though, buy automatons. These are things like "Pick up and put
+downer" and "coal scooper" and "pumper-tron" and "auto-pilot" and stuff. Their
+job is basically to replace you for jobs you don't want to do. So the pick up
+one can be programmed when between levels (like when you buy it) to go here and
+wait for something, and then carry it to here and put it down, repeat. That's
+it. So it replaces part of the job, but not the whole job. You could use it to
+make it so when you build a torpedo you can put it down somewhere near where you
+build them, and the robot will carry it to the bay for you. Or it can unpack
+Filly Putty and put it in this spot.
+
+The auto-pilot can be given a target destination maybe on the periscope and it
+will get there without hitting anything, but will drive very conservatively.
+
+The worker bots will keep the coal scooped, ballast filled, or torpedos
+assembled. Again, not as fast as the average human, but faster than no human!
+And especially if no one on your team likes that job, you can make it go away.
+
+I think one should be setup to be remote triggered with one of a few buttons to
+do things like fire torpedos while no one is at the shoot. I think another
+triggerable one is a rover that is triggered to follow one item and bring it to
+whoever triggers it. So it will pickup the wrench wherever it's put down, and
+then if you hit a button it'll bring you your wrench. Or your smacking stick. Or
+some loose Filly Putty, maybe even one that's been unpacked by a worker bot.
+
+Another may seal rooms that are leaking.
+
+I'm not sure if dead characters should respawn, or if they should need to be
+rescued... If they stay dead then the game is much harder because someone going
+down not only reduces their help, but someone else has to go find them which
+means that second person isn't doing their job either. The respawn version will
+be much more arcadey, though, which could be fun too.
+
+Anyway, the idea is that as the game goes on your ship gets more complicated,
+but also you get more robots running around it keeping the whole thing working.
+Probably multiple ballast tanks and coal things also make the ship faster and
+more maneuverable too. And as the ship gets more capable, it also gets harder
+and slower to run around the coridors to get to everything. More doors make it
+easier to get around, but harder to contain a leak or incursion.
+
+Another room could be a boost room. You have to wind the boost up, but once it's
+ready to go a player can launch it to launch the boat forward. This is another
+one that's probably signaled by the helmsman, but not triggered by it. Someone
+else has to be at the booster to fire the thing, unless you put one of those
+remote automata there.
+
+It's possible the idea could eventually be expanded to other realms, like a
+spaceship, a plane, a hot air balloon, etc. Let's not get ahead of ourselves
+there yet.
