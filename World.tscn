@@ -1,7 +1,10 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Submarine.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Assets/roguelike-pack/Spritesheet/roguelikeSheet_transparent.png" type="Texture" id=2]
+[ext_resource path="res://BarBackground.tres" type="StyleBox" id=3]
+[ext_resource path="res://BarForeground.tres" type="StyleBox" id=4]
+[ext_resource path="res://World.gd" type="Script" id=5]
 
 [sub_resource type="TileSet" id=1]
 0/name = "Water"
@@ -31,6 +34,7 @@
 [sub_resource type="RectangleShape2D" id=2]
 
 [node name="World" type="Node2D"]
+script = ExtResource( 5 )
 
 [node name="Level" type="Node2D" parent="."]
 
@@ -51,3 +55,51 @@ shape = SubResource( 2 )
 
 [node name="Polygon2D" type="Polygon2D" parent="StaticBody2D"]
 polygon = PoolVector2Array( -9.64679, -9.53674, -9.64679, 9.48474, 10.0421, 9.98529, 9.79181, -9.87045 )
+
+[node name="HUD" type="CanvasLayer" parent="."]
+
+[node name="DrivingLayer" type="MarginContainer" parent="HUD"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 20.0
+margin_top = 20.0
+margin_right = -20.0
+margin_bottom = -20.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Control" type="Control" parent="HUD/DrivingLayer"]
+margin_right = 1880.0
+margin_bottom = 1040.0
+
+[node name="Left Engine" type="ProgressBar" parent="HUD/DrivingLayer/Control"]
+anchor_top = 1.0
+anchor_right = 0.4
+anchor_bottom = 1.0
+margin_top = -14.0
+custom_styles/fg = ExtResource( 3 )
+custom_styles/bg = ExtResource( 4 )
+max_value = 32.0
+step = 1.0
+value = 32.0
+percent_visible = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Right Engine" type="ProgressBar" parent="HUD/DrivingLayer/Control"]
+anchor_left = 0.6
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = -14.0
+custom_styles/fg = ExtResource( 4 )
+custom_styles/bg = ExtResource( 3 )
+max_value = 32.0
+step = 1.0
+percent_visible = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="power_changed" from="Submarine" to="." method="_on_Submarine_power_changed"]

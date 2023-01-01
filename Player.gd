@@ -67,18 +67,14 @@ func process_moving(_delta):
 
 func process_driving(_delta):
 	if Input.is_action_just_pressed("ui_up"):
-		submarine.current_throttle = clamp(submarine.current_throttle + 1, -2, 4)
-		prints("THROTTLE", submarine.current_throttle)
+		submarine.increase_throttle(1)
 	if Input.is_action_just_pressed("ui_down"):
-		submarine.current_throttle = clamp(submarine.current_throttle - 1, -2, 4)
-		prints("THROTTLE", submarine.current_throttle)
+		submarine.increase_throttle(-1)
 	
 	if Input.is_action_just_pressed("ui_right"):
-		submarine.current_helm = clamp(submarine.current_helm + 1, -4, 4)
-		prints("HELM", submarine.current_helm)
+		submarine.move_helm(1)
 	if Input.is_action_just_pressed("ui_left"):
-		submarine.current_helm = clamp(submarine.current_helm - 1, -4, 4)
-		prints("HELM", submarine.current_helm)
+		submarine.move_helm(-1)
 
 func reset_move_latch():
 	move_latch = false
