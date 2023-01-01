@@ -6,12 +6,36 @@ export var local = false
 export var speed = 15
 export var move_latch = false
 
+var submarine
+
+enum STATE { MOVING, DRIVING }
+
+export (STATE) var state
+
 func _ready():
 	if local:
 		$Camera2D.current = true
-	pass # Replace with function body.
+	change_state(STATE.DRIVING)
 
-func _physics_process(_delta):
+func _physics_process(delta):
+	match(state):
+		STATE.MOVING:
+			process_moving(delta)
+		STATE.DRIVING:
+			process_driving(delta)
+
+func change_state(new_state):
+	if new_state == state:
+		return
+	
+	state = new_state
+	match(state):
+		STATE.MOVING:
+			$AnimationTree["parameters/playback"].travel("InsideCamera")
+		STATE.DRIVING:
+			$AnimationTree["parameters/playback"].travel("HelmCamera")
+	
+func process_moving(_delta):
 	if move_latch:
 		return
 
@@ -40,6 +64,21 @@ func _physics_process(_delta):
 		move_latch = true
 	else:
 		$AnimationPlayer.play("Stop")
+
+func process_driving(_delta):
+	if Input.is_action_just_pressed("ui_up"):
+		submarine.current_throttle = clamp(submarine.current_throttle + 1, -2, 4)
+		prints("THROTTLE", submarine.current_throttle)
+	if Input.is_action_just_pressed("ui_down"):
+		submarine.current_throttle = clamp(submarine.current_throttle - 1, -2, 4)
+		prints("THROTTLE", submarine.current_throttle)
+	
+	if Input.is_action_just_pressed("ui_right"):
+		submarine.current_helm = clamp(submarine.current_helm + 1, -4, 4)
+		prints("HELM", submarine.current_helm)
+	if Input.is_action_just_pressed("ui_left"):
+		submarine.current_helm = clamp(submarine.current_helm - 1, -4, 4)
+		prints("HELM", submarine.current_helm)
 
 func reset_move_latch():
 	move_latch = false
