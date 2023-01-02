@@ -47,6 +47,11 @@ func change_state(new_state):
 func process_moving(_delta):
 	if move_latch:
 		return
+	
+	if Input.is_action_just_pressed("ui_accept") or Input.is_action_just_pressed("ui_select"):
+		if hovered_item and hovered_item.has_method("interact"):
+			hovered_item.interact(self)
+			return
 
 	var velocity = Vector2.ZERO
 	
@@ -63,7 +68,7 @@ func process_moving(_delta):
 	if velocity != Vector2.ZERO:
 		$AnimationPlayer.play("Run")
 		# No delta because of the latch, we only move one frame
-		var _c = move_and_collide(velocity.normalized() * speed, false)
+		var _c = move_and_collide(velocity.normalized().rotated(global_rotation) * speed, false)
 		# Only set flip_h if it needs to be different.
 		# So if I'm going south, I don't change it
 		if $Sprite.flip_h and velocity.x > 0:
@@ -86,6 +91,9 @@ func process_driving(_delta):
 		submarine.move_helm(1)
 	if Input.is_action_just_pressed("ui_left"):
 		submarine.move_helm(-1)
+	
+	if Input.is_action_just_pressed("ui_cancel") or Input.is_action_just_pressed("ui_accept") or Input.is_action_just_pressed("ui_select"):
+		change_state(STATE.MOVING)
 
 func reset_move_latch():
 	move_latch = false
