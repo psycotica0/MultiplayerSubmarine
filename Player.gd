@@ -9,6 +9,7 @@ export var move_latch = false
 var submarine
 
 var hovered_item
+var held_item
 
 enum STATE { MOVING, DRIVING }
 
@@ -51,6 +52,7 @@ func process_moving(_delta):
 	if Input.is_action_just_pressed("ui_accept") or Input.is_action_just_pressed("ui_select"):
 		if hovered_item and hovered_item.has_method("interact"):
 			hovered_item.interact(self)
+			$AnimationPlayer.play("Stop")
 			return
 
 	var velocity = Vector2.ZERO
@@ -93,6 +95,7 @@ func process_driving(_delta):
 		submarine.move_helm(-1)
 	
 	if Input.is_action_just_pressed("ui_cancel") or Input.is_action_just_pressed("ui_accept") or Input.is_action_just_pressed("ui_select"):
+		drop()
 		change_state(STATE.MOVING)
 
 func reset_move_latch():
@@ -110,6 +113,18 @@ func do_nohover(item):
 	var hover = item.get_node("Hover")
 	if hover:
 		hover.visible = false
+
+func take(item):
+	drop()
+	held_item = item
+	if item.has_method("taken"):
+		item.taken(self)
+
+func drop():
+	if held_item:
+		if held_item.has_method("dropped"):
+			held_item.dropped(self)
+		held_item = null
 
 func _on_Hand_body_entered(body : Node2D):
 	if do_hover(body):
