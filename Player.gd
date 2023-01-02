@@ -15,7 +15,7 @@ export (STATE) var state
 func _ready():
 	if local:
 		$Camera2D.current = true
-	change_state(STATE.DRIVING)
+	change_state(STATE.MOVING)
 
 func _physics_process(delta):
 	match(state):
@@ -54,7 +54,7 @@ func process_moving(_delta):
 	if velocity != Vector2.ZERO:
 		$AnimationPlayer.play("Run")
 		# No delta because of the latch, we only move one frame
-		var _c = move_and_collide(velocity.normalized() * speed)
+		var _c = move_and_collide(velocity.normalized() * speed, false)
 		# Only set flip_h if it needs to be different.
 		# So if I'm going south, I don't change it
 		if $Sprite.flip_h and velocity.x > 0:
