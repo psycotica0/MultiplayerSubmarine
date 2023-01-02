@@ -8,6 +8,8 @@ export var move_latch = false
 
 var submarine
 
+var hovered_item
+
 enum STATE { MOVING, DRIVING }
 
 export (STATE) var state
@@ -15,9 +17,16 @@ export (STATE) var state
 func _ready():
 	if local:
 		$Camera2D.current = true
+	else:
+		# Non-local players shouldn't highlight things they're near
+		$HandZone/Hand.monitorable = false
+		$HandZone/Hand.monitoring = false
 	change_state(STATE.MOVING)
 
 func _physics_process(delta):
+	if not local:
+		return
+
 	match(state):
 		STATE.MOVING:
 			process_moving(delta)
@@ -59,8 +68,10 @@ func process_moving(_delta):
 		# So if I'm going south, I don't change it
 		if $Sprite.flip_h and velocity.x > 0:
 			$Sprite.flip_h = false
+			$HandZone.rotation = 0
 		elif not $Sprite.flip_h and velocity.x < 0:
 			$Sprite.flip_h = true
+			$HandZone.rotation = PI
 		move_latch = true
 	else:
 		$AnimationPlayer.play("Stop")
@@ -78,3 +89,31 @@ func process_driving(_delta):
 
 func reset_move_latch():
 	move_latch = false
+
+func do_hover(item):
+	var hover = item.get_node("Hover")
+	if hover:
+		hover.visible = true
+		return true
+	else:
+		return false
+
+func do_nohover(item):
+	var hover = item.get_node("Hover")
+	if hover:
+		hover.visible = false
+
+func _on_Hand_body_entered(body : Node2D):
+	if do_hover(body):
+		if hovered_item:
+			do_nohover(hovered_item)
+		hovered_item = body
+
+func _on_Hand_body_exited(body):
+	if body == hovered_item:
+		do_nohover(body)
+		hovered_item = null
+	# TODO: Look at other items in my area to see if I should hover any of them
+	# XXX: Also, I should probably make sure that when someone else picks the
+	#      item up it fires this here, so I can unhover it, and look for another
+	#      thing to hover
