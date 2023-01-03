@@ -1,9 +1,11 @@
-[gd_scene load_steps=26 format=2]
+[gd_scene load_steps=29 format=2]
 
 [ext_resource path="res://Assets/roguelike-pack/Spritesheet/roguelikeSheet_transparent.png" type="Texture" id=1]
 [ext_resource path="res://Submarine.gd" type="Script" id=2]
 [ext_resource path="res://Items/Crate.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Items/Helm.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Room.tscn" type="PackedScene" id=5]
+[ext_resource path="res://WaterIndicator.tscn" type="PackedScene" id=6]
 
 [sub_resource type="ConvexPolygonShape2D" id=2]
 points = PoolVector2Array( 8.0845, 8.18472, 0, 16, 0, 0, 16, 0 )
@@ -272,8 +274,13 @@ points = PoolVector2Array( 0, 12.2894, 3.89636, 12.2894, 3.89636, 16, 0, 16 )
 } ]
 3/z_index = 0
 
+[sub_resource type="RectangleShape2D" id=22]
+extents = Vector2( 32, 32 )
+
 [node name="Submarine" type="RigidBody2D"]
 mass = 1000.0
+contacts_reported = 20
+contact_monitor = true
 script = ExtResource( 2 )
 
 [node name="Floor" type="TileMap" parent="."]
@@ -286,6 +293,88 @@ tile_data = PoolIntArray( 15, 3, 131074, 16, 3, 131075, 17, 3, 131075, 18, 3, 13
 
 [node name="Helm" parent="." instance=ExtResource( 4 )]
 position = Vector2( 0, -160 )
+
+[node name="Room1" parent="." instance=ExtResource( 5 )]
+position = Vector2( -64, 144 )
+size = 16
+current_volume = 800.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Room1"]
+shape = SubResource( 22 )
+
+[node name="WaterIndicator" parent="Room1" instance=ExtResource( 6 )]
+position = Vector2( -32, -32 )
+room = NodePath("../../Room1")
+
+[node name="WaterIndicator2" parent="Room1" instance=ExtResource( 6 )]
+position = Vector2( -16, -32 )
+room = NodePath("../../Room1")
+
+[node name="WaterIndicator3" parent="Room1" instance=ExtResource( 6 )]
+position = Vector2( 0, -32 )
+room = NodePath("../../Room1")
+
+[node name="WaterIndicator4" parent="Room1" instance=ExtResource( 6 )]
+position = Vector2( 16, -32 )
+room = NodePath("../../Room1")
+
+[node name="WaterIndicator5" parent="Room1" instance=ExtResource( 6 )]
+position = Vector2( -32, -16 )
+room = NodePath("../../Room1")
+
+[node name="WaterIndicator6" parent="Room1" instance=ExtResource( 6 )]
+position = Vector2( -16, -16 )
+room = NodePath("../../Room1")
+
+[node name="WaterIndicator7" parent="Room1" instance=ExtResource( 6 )]
+position = Vector2( 0, -16 )
+room = NodePath("../../Room1")
+
+[node name="WaterIndicator8" parent="Room1" instance=ExtResource( 6 )]
+position = Vector2( 16, -16 )
+room = NodePath("../../Room1")
+
+[node name="WaterIndicator9" parent="Room1" instance=ExtResource( 6 )]
+position = Vector2( -32, 0 )
+room = NodePath("../../Room1")
+
+[node name="WaterIndicator10" parent="Room1" instance=ExtResource( 6 )]
+position = Vector2( -16, 0 )
+room = NodePath("../../Room1")
+
+[node name="WaterIndicator11" parent="Room1" instance=ExtResource( 6 )]
+room = NodePath("../../Room1")
+
+[node name="WaterIndicator12" parent="Room1" instance=ExtResource( 6 )]
+position = Vector2( 16, 0 )
+room = NodePath("../../Room1")
+
+[node name="WaterIndicator13" parent="Room1" instance=ExtResource( 6 )]
+position = Vector2( -32, 16 )
+room = NodePath("../../Room1")
+
+[node name="WaterIndicator14" parent="Room1" instance=ExtResource( 6 )]
+position = Vector2( -16, 16 )
+room = NodePath("../../Room1")
+
+[node name="WaterIndicator15" parent="Room1" instance=ExtResource( 6 )]
+position = Vector2( 0, 16 )
+room = NodePath("../../Room1")
+
+[node name="WaterIndicator16" parent="Room1" instance=ExtResource( 6 )]
+position = Vector2( 16, 16 )
+room = NodePath("../../Room1")
+
+[node name="Room2" parent="." instance=ExtResource( 5 )]
+position = Vector2( 64, 144 )
+size = 16
+current_volume = 1600.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Room2"]
+shape = SubResource( 22 )
+
+[node name="WaterIndicator" parent="Room2" instance=ExtResource( 6 )]
+room = NodePath("..")
 
 [node name="Players" type="Node2D" parent="."]
 position = Vector2( 0, 32 )

@@ -140,3 +140,6 @@ func _on_Hand_body_exited(body):
 	# XXX: Also, I should probably make sure that when someone else picks the
 	#      item up it fires this here, so I can unhover it, and look for another
 	#      thing to hover
+
+func _on_RoomDetector_room_density_changed(density):
+	$AnimationPlayer.playback_speed = lerp(1.0, 0.25, density)
