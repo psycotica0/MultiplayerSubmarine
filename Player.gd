@@ -46,14 +46,12 @@ func change_state(new_state):
 			$AnimationTree["parameters/playback"].travel("HelmCamera")
 	
 func process_moving(_delta):
-	if move_latch:
-		return
-	
 	if Input.is_action_just_pressed("ui_accept") or Input.is_action_just_pressed("ui_select"):
 		if hovered_item and hovered_item.has_method("interact"):
 			hovered_item.interact(self)
-			$AnimationPlayer.play("Stop")
-			return
+	
+	if move_latch:
+		return
 
 	var velocity = Vector2.ZERO
 	
