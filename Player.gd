@@ -13,6 +13,8 @@ var submarine
 var hovered_item
 var held_item
 
+var current_room setget ,_get_current_room
+
 const EMPTY_LAYER = 128
 const VACUUM_LAYER = 256
 
@@ -53,7 +55,13 @@ func change_state(new_state):
 func process_moving(_delta):
 	if Input.is_action_just_pressed("ui_accept") or Input.is_action_just_pressed("ui_select"):
 		if hovered_item and hovered_item.has_method("interact"):
-			hovered_item.interact(self)
+			if held_item and held_item.has_method("use_on"):
+				held_item.use_on(self, hovered_item)
+			else:
+				hovered_item.interact(self)
+		else:
+			if held_item and held_item.has_method("use_on"):
+				held_item.use_on(self, null)
 	
 	if Input.is_action_just_pressed("drop_item"):
 		drop()
@@ -157,3 +165,6 @@ func _on_Hand_body_exited(body):
 
 func _on_RoomDetector_room_density_changed(density):
 	$AnimationTree["parameters/WalkingMode/RunSpeed/scale"] = lerp(1.0, 0.25, density)
+
+func _get_current_room():
+	return $RoomDetector.current_room

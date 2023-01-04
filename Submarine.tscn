@@ -374,7 +374,6 @@ position = Vector2( -16, -112 )
 
 [node name="Damage" parent="." instance=ExtResource( 8 )]
 position = Vector2( -192, -96 )
-level = 3
 
 [node name="LeftDoor" parent="." instance=ExtResource( 6 )]
 position = Vector2( -144, -96 )
