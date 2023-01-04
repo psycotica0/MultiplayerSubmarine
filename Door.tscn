@@ -12,7 +12,7 @@ extents = Vector2( 10, 16 )
 extents = Vector2( 10, 8 )
 
 [node name="Door" type="StaticBody2D"]
-collision_layer = 128
+collision_layer = 384
 script = ExtResource( 3 )
 
 [node name="Open" type="Sprite" parent="."]

@@ -1,5 +1,7 @@
 extends KinematicBody2D
 
+class_name Player
+
 # Controls if this player is the local player or not
 export var local = false
 
@@ -10,6 +12,9 @@ var submarine
 
 var hovered_item
 var held_item
+
+const EMPTY_LAYER = 128
+const VACUUM_LAYER = 256
 
 enum STATE { MOVING, DRIVING }
 
@@ -50,6 +55,9 @@ func process_moving(_delta):
 		if hovered_item and hovered_item.has_method("interact"):
 			hovered_item.interact(self)
 	
+	if Input.is_action_just_pressed("drop_item"):
+		drop()
+	
 	if move_latch:
 		return
 
@@ -89,7 +97,7 @@ func process_driving(_delta):
 	if Input.is_action_just_pressed("ui_left"):
 		submarine.move_helm(-1)
 	
-	if Input.is_action_just_pressed("ui_cancel") or Input.is_action_just_pressed("ui_accept") or Input.is_action_just_pressed("ui_select"):
+	if Input.is_action_just_pressed("ui_cancel") or Input.is_action_just_pressed("ui_accept") or Input.is_action_just_pressed("ui_select") or Input.is_action_just_pressed("drop_item"):
 		drop()
 		change_state(STATE.MOVING)
 
@@ -120,10 +128,17 @@ func drop():
 		if held_item.has_method("dropped"):
 			held_item.dropped(self)
 		held_item = null
+		item_layer(EMPTY_LAYER)
 
 func attach(item):
 	item.get_parent().remove_child(item)
 	$HandZone/Attach.add_child(item)
+
+func detach(item):
+	$HandZone/Attach.remove_child(item)
+
+func item_layer(mask):
+	$HandZone/Hand.collision_mask = mask
 
 func _on_Hand_body_entered(body : Node2D):
 	if do_hover(body):

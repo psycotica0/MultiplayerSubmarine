@@ -384,7 +384,9 @@ rotation = 1.5708
 position = Vector2( 160, -96 )
 rotation = 1.5708
 
-[node name="Vacuum" parent="." instance=ExtResource( 9 )]
+[node name="Items" type="Node2D" parent="."]
+
+[node name="Vacuum" parent="Items" instance=ExtResource( 9 )]
 
 [node name="Players" type="Node2D" parent="."]
 position = Vector2( 0, 32 )

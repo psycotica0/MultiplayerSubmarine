@@ -11,7 +11,12 @@ func interact(player):
 
 func taken(player):
 	player.attach(self)
+	position = Vector2(0,0)
+	player.item_layer(Player.VACUUM_LAYER)
 	$CollisionShape2D.disabled = true
 
 func dropped(player):
-	pass
+	player.detach(self)
+	original_parent.add_child(self)
+	global_position = player.global_position
+	$CollisionShape2D.disabled = false
