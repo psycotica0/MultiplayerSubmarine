@@ -11,5 +11,5 @@ func taken(player):
 	# XXX: I'll have to broadcast to other players that I'm not available
 	$CollisionShape2D.disabled = true
 
-func dropped(player):
+func dropped(_player):
 	$CollisionShape2D.disabled = false

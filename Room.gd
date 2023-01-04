@@ -13,6 +13,12 @@ const FLOW_RATE = 160
 const MAX_GRADIENT = 0.5
 var max_volume
 
+func _init():
+	if not connections:
+		# This has to be put here because if you put it in the definition then all
+		# instances will share the same array and things get really weird...
+		connections = []
+
 func _enter_tree():
 	max_volume = size * 100.0
 
@@ -44,3 +50,13 @@ func density_maybe_changed():
 	
 	last_signalled_density = density()
 	emit_signal("density_changed", density())
+
+func link(other_room):
+	var path = get_path_to(other_room)
+	if not connections.has(path):
+		connections.append(path)
+
+func unlink(other_room):
+	var path = get_path_to(other_room)
+	if connections.has(path):
+		connections.erase(path)
