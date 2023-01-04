@@ -41,9 +41,9 @@ func change_state(new_state):
 	state = new_state
 	match(state):
 		STATE.MOVING:
-			$AnimationTree["parameters/playback"].travel("InsideCamera")
+			$AnimationTree["parameters/playback"].travel("WalkingMode")
 		STATE.DRIVING:
-			$AnimationTree["parameters/playback"].travel("HelmCamera")
+			$AnimationTree["parameters/playback"].travel("DrivingMode")
 	
 func process_moving(_delta):
 	if Input.is_action_just_pressed("ui_accept") or Input.is_action_just_pressed("ui_select"):
@@ -66,20 +66,17 @@ func process_moving(_delta):
 			velocity += action_direction[dir]
 	
 	if velocity != Vector2.ZERO:
-		$AnimationPlayer.play("Run")
+		$AnimationTree["parameters/WalkingMode/Running/blend_amount"] = 1
 		# No delta because of the latch, we only move one frame
 		var _c = move_and_collide(velocity.normalized().rotated(global_rotation) * speed, false)
-		# Only set flip_h if it needs to be different.
-		# So if I'm going south, I don't change it
-		if $Sprite.flip_h and velocity.x > 0:
-			$Sprite.flip_h = false
-			$HandZone.rotation = 0
-		elif not $Sprite.flip_h and velocity.x < 0:
-			$Sprite.flip_h = true
-			$HandZone.rotation = PI
+		if velocity.x > 0:
+			$AnimationTree["parameters/WalkingMode/Facing/blend_position"] = 1
+		elif velocity.x < 0:
+			$AnimationTree["parameters/WalkingMode/Facing/blend_position"] = -1
+		
 		move_latch = true
 	else:
-		$AnimationPlayer.play("Stop")
+		$AnimationTree["parameters/WalkingMode/Running/blend_amount"] = 0
 
 func process_driving(_delta):
 	if Input.is_action_just_pressed("ui_up"):
@@ -124,6 +121,10 @@ func drop():
 			held_item.dropped(self)
 		held_item = null
 
+func attach(item):
+	item.get_parent().remove_child(item)
+	$HandZone/Attach.add_child(item)
+
 func _on_Hand_body_entered(body : Node2D):
 	if do_hover(body):
 		if hovered_item:
@@ -140,4 +141,4 @@ func _on_Hand_body_exited(body):
 	#      thing to hover
 
 func _on_RoomDetector_room_density_changed(density):
-	$AnimationPlayer.playback_speed = lerp(1.0, 0.25, density)
+	$AnimationTree["parameters/WalkingMode/RunSpeed/scale"] = lerp(1.0, 0.25, density)

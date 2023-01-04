@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=2]
+[gd_scene load_steps=35 format=2]
 
 [ext_resource path="res://Assets/roguelike-pack/Spritesheet/roguelikeSheet_transparent.png" type="Texture" id=1]
 [ext_resource path="res://Submarine.gd" type="Script" id=2]
@@ -8,6 +8,7 @@
 [ext_resource path="res://Door.tscn" type="PackedScene" id=6]
 [ext_resource path="res://WaterIndicatorGrid.tscn" type="PackedScene" id=7]
 [ext_resource path="res://Damage.tscn" type="PackedScene" id=8]
+[ext_resource path="res://Items/Vacuum.tscn" type="PackedScene" id=9]
 
 [sub_resource type="ConvexPolygonShape2D" id=2]
 points = PoolVector2Array( 8.0845, 8.18472, 0, 16, 0, 0, 16, 0 )
@@ -373,6 +374,7 @@ position = Vector2( -16, -112 )
 
 [node name="Damage" parent="." instance=ExtResource( 8 )]
 position = Vector2( -192, -96 )
+level = 3
 
 [node name="LeftDoor" parent="." instance=ExtResource( 6 )]
 position = Vector2( -144, -96 )
@@ -381,6 +383,8 @@ rotation = 1.5708
 [node name="RightDoor" parent="." instance=ExtResource( 6 )]
 position = Vector2( 160, -96 )
 rotation = 1.5708
+
+[node name="Vacuum" parent="." instance=ExtResource( 9 )]
 
 [node name="Players" type="Node2D" parent="."]
 position = Vector2( 0, 32 )

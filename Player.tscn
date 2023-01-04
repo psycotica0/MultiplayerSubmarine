@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=29 format=2]
 
 [ext_resource path="res://Assets/Players/purple.png" type="Texture" id=1]
 [ext_resource path="res://Player.gd" type="Script" id=2]
@@ -8,6 +8,110 @@
 [sub_resource type="CapsuleShape2D" id=3]
 radius = 3.87921
 height = 1.98968
+
+[sub_resource type="Animation" id=14]
+resource_name = "FaceLeft"
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:flip_h")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("HandZone/Hand/CollisionShape2D:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( -12, 0 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("HandZone/Attach:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( -4, 2 ) ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("HandZone/Attach:scale")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 1, 1 ) ]
+}
+
+[sub_resource type="Animation" id=15]
+resource_name = "FaceRight"
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:flip_h")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ false ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("HandZone/Hand/CollisionShape2D:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 12, 0 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("HandZone/Attach:position")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( 4, 2 ) ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("HandZone/Attach:scale")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Vector2( -1, 1 ) ]
+}
 
 [sub_resource type="Animation" id=8]
 resource_name = "HelmCamera"
@@ -170,22 +274,70 @@ tracks/0/keys = {
 [sub_resource type="AnimationNodeAnimation" id=9]
 animation = "HelmCamera"
 
-[sub_resource type="AnimationNodeAnimation" id=10]
+[sub_resource type="AnimationNodeAdd2" id=16]
+
+[sub_resource type="AnimationNodeAdd2" id=17]
+
+[sub_resource type="AnimationNodeAnimation" id=18]
 animation = "InsideCamera"
 
-[sub_resource type="AnimationNodeStateMachineTransition" id=11]
+[sub_resource type="AnimationNodeAnimation" id=19]
+animation = "FaceRight"
+
+[sub_resource type="AnimationNodeAnimation" id=20]
+animation = "FaceLeft"
+
+[sub_resource type="AnimationNodeBlendSpace1D" id=21]
+blend_point_0/node = SubResource( 19 )
+blend_point_0/pos = 1.0
+blend_point_1/node = SubResource( 20 )
+blend_point_1/pos = -1.0
+
+[sub_resource type="AnimationNodeAnimation" id=22]
+animation = "Run"
+
+[sub_resource type="AnimationNodeTimeScale" id=23]
+
+[sub_resource type="AnimationNodeBlend2" id=24]
+
+[sub_resource type="AnimationNodeAnimation" id=25]
+animation = "Stop"
+
+[sub_resource type="AnimationNodeBlendTree" id=26]
+graph_offset = Vector2( 8.5, -5.5 )
+nodes/Add2/node = SubResource( 17 )
+nodes/Add2/position = Vector2( 670, 110 )
+"nodes/Add2 2/node" = SubResource( 16 )
+"nodes/Add2 2/position" = Vector2( 910, 80 )
+nodes/Animation/node = SubResource( 18 )
+nodes/Animation/position = Vector2( 620, -50 )
+nodes/Facing/node = SubResource( 21 )
+nodes/Facing/position = Vector2( 350, 60 )
+nodes/Run/node = SubResource( 22 )
+nodes/Run/position = Vector2( 150, 360 )
+nodes/RunSpeed/node = SubResource( 23 )
+nodes/RunSpeed/position = Vector2( 310, 340 )
+nodes/Running/node = SubResource( 24 )
+nodes/Running/position = Vector2( 480, 240 )
+nodes/Stop/node = SubResource( 25 )
+nodes/Stop/position = Vector2( 150, 240 )
+nodes/output/position = Vector2( 1190, 90 )
+node_connections = [ "output", 0, "Add2 2", "Add2 2", 0, "Animation", "Add2 2", 1, "Add2", "Add2", 0, "Facing", "Add2", 1, "Running", "Running", 0, "Stop", "Running", 1, "RunSpeed", "RunSpeed", 0, "Run" ]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=27]
 xfade_time = 1.0
 
-[sub_resource type="AnimationNodeStateMachineTransition" id=12]
+[sub_resource type="AnimationNodeStateMachineTransition" id=28]
 xfade_time = 1.0
 
 [sub_resource type="AnimationNodeStateMachine" id=6]
-states/HelmCamera/node = SubResource( 9 )
-states/HelmCamera/position = Vector2( 893, 134.5 )
-states/InsideCamera/node = SubResource( 10 )
-states/InsideCamera/position = Vector2( 555.5, 53 )
-transitions = [ "InsideCamera", "HelmCamera", SubResource( 11 ), "HelmCamera", "InsideCamera", SubResource( 12 ) ]
-start_node = "InsideCamera"
+states/DrivingMode/node = SubResource( 9 )
+states/DrivingMode/position = Vector2( 893, 134.5 )
+states/WalkingMode/node = SubResource( 26 )
+states/WalkingMode/position = Vector2( 716, -73 )
+transitions = [ "WalkingMode", "DrivingMode", SubResource( 27 ), "DrivingMode", "WalkingMode", SubResource( 28 ) ]
+start_node = "WalkingMode"
+graph_offset = Vector2( 174, -132 )
 
 [sub_resource type="AnimationNodeStateMachinePlayback" id=7]
 
@@ -200,8 +352,9 @@ script = ExtResource( 2 )
 position = Vector2( 4.76837e-07, 4.76837e-07 )
 scale = Vector2( 0.666667, 0.666667 )
 texture = ExtResource( 1 )
+flip_h = true
 hframes = 4
-frame = 3
+frame = 1
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2( 0, 3.51166 )
@@ -212,6 +365,8 @@ rotating = true
 zoom = Vector2( 0.25, 0.25 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/FaceLeft = SubResource( 14 )
+anims/FaceRight = SubResource( 15 )
 anims/HelmCamera = SubResource( 8 )
 anims/InsideCamera = SubResource( 5 )
 anims/Run = SubResource( 2 )
@@ -219,6 +374,7 @@ anims/Stop = SubResource( 4 )
 
 [node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource( 3 )
+volume_db = -12.0412
 pitch_scale = 0.5
 
 [node name="AnimationTree" type="AnimationTree" parent="."]
@@ -226,6 +382,11 @@ tree_root = SubResource( 6 )
 anim_player = NodePath("../AnimationPlayer")
 active = true
 parameters/playback = SubResource( 7 )
+parameters/WalkingMode/Add2/add_amount = 0.5
+"parameters/WalkingMode/Add2 2/add_amount" = 0.5
+parameters/WalkingMode/Facing/blend_position = -1.0
+parameters/WalkingMode/RunSpeed/scale = 1.0
+parameters/WalkingMode/Running/blend_amount = 0.0
 
 [node name="HandZone" type="Node2D" parent="."]
 
@@ -234,8 +395,11 @@ collision_layer = 0
 collision_mask = 128
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HandZone/Hand"]
-position = Vector2( 11.8882, 0 )
+position = Vector2( -12, 0 )
 shape = SubResource( 13 )
+
+[node name="Attach" type="Node2D" parent="HandZone"]
+position = Vector2( -4, 2 )
 
 [node name="RoomDetector" parent="." instance=ExtResource( 4 )]
 [connection signal="body_entered" from="HandZone/Hand" to="." method="_on_Hand_body_entered"]
