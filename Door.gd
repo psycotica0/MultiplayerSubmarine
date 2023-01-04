@@ -6,12 +6,15 @@ signal density_changed(density)
 var is_open = true
 
 func _ready():
+	# I don't need it to play a bunch of door opening sounds at the start
+	var initial = $AudioStreamPlayer2D.volume_db
+	$AudioStreamPlayer2D.volume_db = -100
 	assert_state()
+	yield($AnimationPlayer, "animation_finished")
+	$AudioStreamPlayer2D.volume_db = initial
 
 func open():
-	$Closed.visible = false
-	$Open.visible = true
-	$Blocker/CollisionShape2D.disabled = true
+	$AnimationPlayer.play("Open")
 	
 	var bottom_room = $BottomRoom.current_room
 	var top_room = $TopRoom.current_room
@@ -20,9 +23,7 @@ func open():
 		top_room.link(bottom_room)
 
 func close():
-	$Closed.visible = true
-	$Open.visible = false
-	$Blocker/CollisionShape2D.disabled = false
+	$AnimationPlayer.play("Close")
 	
 	var bottom_room = $BottomRoom.current_room
 	var top_room = $TopRoom.current_room
@@ -42,8 +43,7 @@ func assert_state():
 
 func _on_room_changed(_old_room, _new_room):
 	if $BottomRoom.current_room and $TopRoom.current_room:
-		# It works if I don't do this, but it does put something in the error log
-		call_deferred("assert_state")
+		assert_state()
 
 func _on_room_density_changed(_density):
 	emit_signal("density_changed", density())
