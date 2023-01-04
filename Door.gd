@@ -46,4 +46,7 @@ func _on_room_changed(_old_room, _new_room):
 		call_deferred("assert_state")
 
 func _on_room_density_changed(_density):
-	emit_signal("density_changed", $BottomRoom.density() + $TopRoom.density() / 2.0)
+	emit_signal("density_changed", density())
+
+func density():
+	return ($BottomRoom.density() + $TopRoom.density()) / 2.0
