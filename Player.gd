@@ -84,7 +84,10 @@ func process_moving(_delta):
 	if velocity != Vector2.ZERO:
 		$AnimationTree["parameters/WalkingMode/Running/blend_amount"] = 1
 		# No delta because of the latch, we only move one frame
-		var _c = move_and_collide(velocity.normalized().rotated(global_rotation) * speed, false)
+		var effective_speed = 1.0
+		if Input.is_action_pressed("walk"):
+			effective_speed = 0.5
+		var _c = move_and_collide(velocity.normalized().rotated(global_rotation) * speed * effective_speed, false)
 		if velocity.x > 0:
 			$AnimationTree["parameters/WalkingMode/Facing/blend_position"] = 1
 		elif velocity.x < 0:
