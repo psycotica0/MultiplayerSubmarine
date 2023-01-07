@@ -147,7 +147,7 @@ tracks/4/keys = {
 }
 
 [node name="Door" type="StaticBody2D"]
-collision_layer = 384
+collision_layer = 896
 script = ExtResource( 3 )
 
 [node name="WaterIndicator" parent="." instance=ExtResource( 6 )]

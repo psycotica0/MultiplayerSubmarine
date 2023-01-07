@@ -2,6 +2,8 @@ extends KinematicBody2D
 
 class_name Player
 
+signal waiting_done()
+
 # Controls if this player is the local player or not
 export var local = false
 
@@ -15,10 +17,11 @@ var held_item
 
 var current_room setget ,_get_current_room
 
-const EMPTY_LAYER = 128
-const VACUUM_LAYER = 256
+const EMPTY_LAYER = 1 << 7 # 128
+const VACUUM_LAYER = 1 << 8 # 256
+const PUTTY_LAYER = 1 << 9
 
-enum STATE { MOVING, DRIVING }
+enum STATE { MOVING, DRIVING, WAITING }
 
 export (STATE) var state
 
@@ -51,6 +54,8 @@ func change_state(new_state):
 			$AnimationTree["parameters/playback"].travel("WalkingMode")
 		STATE.DRIVING:
 			$AnimationTree["parameters/playback"].travel("DrivingMode")
+		STATE.WAITING:
+			$AnimationTree["parameters/playback"].travel("Waiting")
 	
 func process_moving(_delta):
 	if Input.is_action_just_pressed("ui_accept") or Input.is_action_just_pressed("ui_select"):
@@ -142,7 +147,8 @@ func drop():
 		item_layer(EMPTY_LAYER)
 
 func attach(item):
-	item.get_parent().remove_child(item)
+	if item.get_parent():
+		item.get_parent().remove_child(item)
 	$HandZone/Attach.add_child(item)
 
 func detach(item):
@@ -171,3 +177,11 @@ func _on_RoomDetector_room_density_changed(density):
 
 func _get_current_room():
 	return $RoomDetector.current_room
+
+func wait():
+	change_state(STATE.WAITING)
+	$WaitTimer.start()
+
+func _on_WaitTimer_timeout():
+	change_state(STATE.MOVING)
+	emit_signal("waiting_done")

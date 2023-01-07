@@ -1,9 +1,14 @@
-[gd_scene load_steps=29 format=2]
+[gd_scene load_steps=38 format=2]
 
 [ext_resource path="res://Assets/Players/purple.png" type="Texture" id=1]
 [ext_resource path="res://Player.gd" type="Script" id=2]
 [ext_resource path="res://Assets/The Essential Retro Video Game Sound Effects Collection [512 sounds] By Juhani Junkala/Movement/Footsteps/sfx_movement_footsteps5.wav" type="AudioStream" id=3]
 [ext_resource path="res://RoomDetector.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Assets/Waiting/Spritesheet.png" type="Texture" id=5]
+
+[sub_resource type="AtlasTexture" id=29]
+atlas = ExtResource( 5 )
+region = Rect2( 0, 0, 16, 16 )
 
 [sub_resource type="CapsuleShape2D" id=3]
 radius = 3.87921
@@ -271,8 +276,59 @@ tracks/0/keys = {
 "values": [ 1 ]
 }
 
+[sub_resource type="Animation" id=30]
+resource_name = "StopWaiting"
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("Waiting:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ false ]
+}
+
+[sub_resource type="Animation" id=31]
+resource_name = "Waiting"
+length = 1.5
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Waiting:texture:region")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5, 1 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 1,
+"values": [ Rect2( 0, 0, 16, 16 ), Rect2( 16, 0, 16, 16 ), Rect2( 32, 0, 16, 16 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Waiting:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
+
 [sub_resource type="AnimationNodeAnimation" id=9]
 animation = "HelmCamera"
+
+[sub_resource type="AnimationNodeAnimation" id=32]
+animation = "StopWaiting"
+
+[sub_resource type="AnimationNodeAnimation" id=33]
+animation = "Waiting"
 
 [sub_resource type="AnimationNodeAdd2" id=16]
 
@@ -304,7 +360,7 @@ animation = "Run"
 animation = "Stop"
 
 [sub_resource type="AnimationNodeBlendTree" id=26]
-graph_offset = Vector2( 8.5, -5.5 )
+graph_offset = Vector2( 157.903, -155.441 )
 nodes/Add2/node = SubResource( 17 )
 nodes/Add2/position = Vector2( 670, 110 )
 "nodes/Add2 2/node" = SubResource( 16 )
@@ -321,7 +377,7 @@ nodes/Running/node = SubResource( 24 )
 nodes/Running/position = Vector2( 480, 240 )
 nodes/Stop/node = SubResource( 25 )
 nodes/Stop/position = Vector2( 150, 240 )
-nodes/output/position = Vector2( 1190, 90 )
+nodes/output/position = Vector2( 1340, 80 )
 node_connections = [ "output", 0, "Add2 2", "Add2 2", 0, "Animation", "Add2 2", 1, "Add2", "Add2", 0, "Facing", "Add2", 1, "Running", "Running", 0, "Stop", "Running", 1, "RunSpeed", "RunSpeed", 0, "Run" ]
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=27]
@@ -330,14 +386,24 @@ xfade_time = 1.0
 [sub_resource type="AnimationNodeStateMachineTransition" id=28]
 xfade_time = 1.0
 
+[sub_resource type="AnimationNodeStateMachineTransition" id=34]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=35]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=36]
+
 [sub_resource type="AnimationNodeStateMachine" id=6]
 states/DrivingMode/node = SubResource( 9 )
 states/DrivingMode/position = Vector2( 893, 134.5 )
+states/StopWaiting/node = SubResource( 32 )
+states/StopWaiting/position = Vector2( 1124, -54.75 )
+states/Waiting/node = SubResource( 33 )
+states/Waiting/position = Vector2( 1124.5, -133 )
 states/WalkingMode/node = SubResource( 26 )
 states/WalkingMode/position = Vector2( 716, -73 )
-transitions = [ "WalkingMode", "DrivingMode", SubResource( 27 ), "DrivingMode", "WalkingMode", SubResource( 28 ) ]
+transitions = [ "WalkingMode", "DrivingMode", SubResource( 27 ), "DrivingMode", "WalkingMode", SubResource( 28 ), "WalkingMode", "Waiting", SubResource( 34 ), "Waiting", "StopWaiting", SubResource( 35 ), "StopWaiting", "WalkingMode", SubResource( 36 ) ]
 start_node = "WalkingMode"
-graph_offset = Vector2( 174, -132 )
+graph_offset = Vector2( 464, -203 )
 
 [sub_resource type="AnimationNodeStateMachinePlayback" id=7]
 
@@ -356,7 +422,13 @@ flip_h = true
 hframes = 4
 frame = 1
 
+[node name="Waiting" type="Sprite" parent="."]
+visible = false
+texture = SubResource( 29 )
+region_rect = Rect2( 0, 0, 16, 16 )
+
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
 position = Vector2( 0, 3.51166 )
 shape = SubResource( 3 )
 
@@ -371,6 +443,8 @@ anims/HelmCamera = SubResource( 8 )
 anims/InsideCamera = SubResource( 5 )
 anims/Run = SubResource( 2 )
 anims/Stop = SubResource( 4 )
+anims/StopWaiting = SubResource( 30 )
+anims/Waiting = SubResource( 31 )
 
 [node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource( 3 )
@@ -395,6 +469,7 @@ collision_layer = 0
 collision_mask = 128
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HandZone/Hand"]
+visible = false
 position = Vector2( -12, 0 )
 shape = SubResource( 13 )
 
@@ -402,6 +477,12 @@ shape = SubResource( 13 )
 position = Vector2( -4, 2 )
 
 [node name="RoomDetector" parent="." instance=ExtResource( 4 )]
+visible = false
+
+[node name="WaitTimer" type="Timer" parent="."]
+wait_time = 1.5
+one_shot = true
 [connection signal="body_entered" from="HandZone/Hand" to="." method="_on_Hand_body_entered"]
 [connection signal="body_exited" from="HandZone/Hand" to="." method="_on_Hand_body_exited"]
 [connection signal="room_density_changed" from="RoomDetector" to="." method="_on_RoomDetector_room_density_changed"]
+[connection signal="timeout" from="WaitTimer" to="." method="_on_WaitTimer_timeout"]

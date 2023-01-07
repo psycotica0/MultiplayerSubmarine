@@ -1,8 +1,9 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Assets/roguelike-pack/Spritesheet/roguelikeSheet_transparent.png" type="Texture" id=1]
 [ext_resource path="res://Damage.gd" type="Script" id=2]
 [ext_resource path="res://RoomDetector.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Items/Hover.tscn" type="PackedScene" id=4]
 
 [sub_resource type="AtlasTexture" id=1]
 resource_local_to_scene = true
@@ -57,7 +58,12 @@ tracks/0/keys = {
 "values": [ Rect2( 918, 476, 16, 16 ) ]
 }
 
-[node name="Damage" type="Node2D"]
+[sub_resource type="RectangleShape2D" id=5]
+extents = Vector2( 8, 8 )
+
+[node name="Damage" type="StaticBody2D"]
+collision_layer = 512
+collision_mask = 0
 script = ExtResource( 2 )
 
 [node name="Sprite" type="Sprite" parent="."]
@@ -70,4 +76,12 @@ anims/Level2 = SubResource( 3 )
 anims/Level3 = SubResource( 4 )
 
 [node name="RoomDetector" parent="." instance=ExtResource( 3 )]
+position = Vector2( 8, 8 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 8, 8 )
+shape = SubResource( 5 )
+
+[node name="Hover" parent="." instance=ExtResource( 4 )]
+visible = false
 position = Vector2( 8, 8 )

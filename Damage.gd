@@ -13,6 +13,15 @@ func _process(delta):
 		# It tells me how much it actually took, but I don't really care here
 		var _v = r.receive_water(inverse_lerp(0, 3, level) * MAX_FLOW_RATE * delta)
 
+# If somehow we fall through some case and the player is able to interact with
+# us without using the filly putty, just assume we should go away
+func interact(_player):
+	fill()
+
+# This is called by the filly putty when it's used on this item
+func fill():
+	queue_free()
+
 func _set_level(new_level):
 	level = new_level
 	match level:
