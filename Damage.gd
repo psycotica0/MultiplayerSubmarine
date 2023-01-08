@@ -25,11 +25,11 @@ func fill():
 func _set_level(new_level):
 	level = new_level
 	match level:
+		0:
+			queue_free()
 		1:
 			$AnimationPlayer.play("Level1")
 		2:
 			$AnimationPlayer.play("Level2")
-		3:
-			$AnimationPlayer.play("Level3")
 		_:
-			queue_free()
+			$AnimationPlayer.play("Level3")

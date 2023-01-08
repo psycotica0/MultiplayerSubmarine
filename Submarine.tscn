@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=2]
+[gd_scene load_steps=34 format=2]
 
 [ext_resource path="res://Assets/roguelike-pack/Spritesheet/roguelikeSheet_transparent.png" type="Texture" id=1]
 [ext_resource path="res://Submarine.gd" type="Script" id=2]
@@ -7,7 +7,6 @@
 [ext_resource path="res://Room.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Door.tscn" type="PackedScene" id=6]
 [ext_resource path="res://WaterIndicatorGrid.tscn" type="PackedScene" id=7]
-[ext_resource path="res://Damage.tscn" type="PackedScene" id=8]
 [ext_resource path="res://Items/Vacuum.tscn" type="PackedScene" id=9]
 
 [sub_resource type="ConvexPolygonShape2D" id=2]
@@ -372,10 +371,6 @@ position = Vector2( -16, -48 )
 [node name="CockpitDoor" parent="." instance=ExtResource( 6 )]
 position = Vector2( -16, -112 )
 
-[node name="Damage" parent="." instance=ExtResource( 8 )]
-position = Vector2( -192, -96 )
-level = 3
-
 [node name="LeftDoor" parent="." instance=ExtResource( 6 )]
 position = Vector2( -144, -96 )
 rotation = 1.5708
@@ -383,6 +378,8 @@ rotation = 1.5708
 [node name="RightDoor" parent="." instance=ExtResource( 6 )]
 position = Vector2( 160, -96 )
 rotation = 1.5708
+
+[node name="Damage" type="Node2D" parent="."]
 
 [node name="Items" type="Node2D" parent="."]
 
