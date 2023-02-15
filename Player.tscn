@@ -6,15 +6,15 @@
 [ext_resource path="res://RoomDetector.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Assets/Waiting/Spritesheet.png" type="Texture" id=5]
 
-[sub_resource type="AtlasTexture" id=29]
+[sub_resource type="AtlasTexture" id=1]
 atlas = ExtResource( 5 )
 region = Rect2( 0, 0, 16, 16 )
 
-[sub_resource type="CapsuleShape2D" id=3]
+[sub_resource type="CapsuleShape2D" id=2]
 radius = 3.87921
 height = 1.98968
 
-[sub_resource type="Animation" id=14]
+[sub_resource type="Animation" id=3]
 resource_name = "FaceLeft"
 length = 0.001
 tracks/0/type = "value"
@@ -66,7 +66,7 @@ tracks/3/keys = {
 "values": [ Vector2( 1, 1 ) ]
 }
 
-[sub_resource type="Animation" id=15]
+[sub_resource type="Animation" id=4]
 resource_name = "FaceRight"
 length = 0.001
 tracks/0/type = "value"
@@ -118,7 +118,7 @@ tracks/3/keys = {
 "values": [ Vector2( -1, 1 ) ]
 }
 
-[sub_resource type="Animation" id=8]
+[sub_resource type="Animation" id=5]
 resource_name = "HelmCamera"
 length = 0.5
 tracks/0/type = "value"
@@ -158,8 +158,7 @@ tracks/2/keys = {
 "values": [ Vector2( 0, -300 ) ]
 }
 
-[sub_resource type="Animation" id=5]
-resource_name = "InsideCamera"
+[sub_resource type="Animation" id=6]
 length = 0.5
 tracks/0/type = "value"
 tracks/0/path = NodePath("Camera2D:offset")
@@ -198,8 +197,7 @@ tracks/2/keys = {
 "values": [ Vector2( 0, 0 ) ]
 }
 
-[sub_resource type="Animation" id=2]
-resource_name = "Run"
+[sub_resource type="Animation" id=7]
 length = 0.3
 loop = true
 step = 0.05
@@ -260,8 +258,7 @@ tracks/3/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=4]
-resource_name = "Stop"
+[sub_resource type="Animation" id=8]
 length = 0.1
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame")
@@ -276,7 +273,7 @@ tracks/0/keys = {
 "values": [ 1 ]
 }
 
-[sub_resource type="Animation" id=30]
+[sub_resource type="Animation" id=9]
 resource_name = "StopWaiting"
 length = 0.001
 tracks/0/type = "value"
@@ -292,7 +289,7 @@ tracks/0/keys = {
 "values": [ false ]
 }
 
-[sub_resource type="Animation" id=31]
+[sub_resource type="Animation" id=10]
 resource_name = "Waiting"
 length = 1.5
 loop = true
@@ -321,95 +318,97 @@ tracks/1/keys = {
 "values": [ true ]
 }
 
-[sub_resource type="AnimationNodeAnimation" id=9]
+[sub_resource type="AnimationNodeAnimation" id=11]
 animation = "HelmCamera"
 
-[sub_resource type="AnimationNodeAnimation" id=32]
+[sub_resource type="AnimationNodeAnimation" id=12]
 animation = "StopWaiting"
 
-[sub_resource type="AnimationNodeAnimation" id=33]
+[sub_resource type="AnimationNodeAnimation" id=13]
 animation = "Waiting"
 
-[sub_resource type="AnimationNodeAdd2" id=16]
+[sub_resource type="AnimationNodeAdd2" id=14]
 
-[sub_resource type="AnimationNodeAdd2" id=17]
+[sub_resource type="AnimationNodeAdd2" id=15]
 
-[sub_resource type="AnimationNodeAnimation" id=18]
+[sub_resource type="AnimationNodeAnimation" id=16]
 animation = "InsideCamera"
 
-[sub_resource type="AnimationNodeAnimation" id=19]
+[sub_resource type="AnimationNodeAnimation" id=17]
 animation = "FaceRight"
 
-[sub_resource type="AnimationNodeAnimation" id=20]
+[sub_resource type="AnimationNodeAnimation" id=18]
 animation = "FaceLeft"
 
-[sub_resource type="AnimationNodeBlendSpace1D" id=21]
-blend_point_0/node = SubResource( 19 )
+[sub_resource type="AnimationNodeBlendSpace1D" id=19]
+blend_point_0/node = SubResource( 17 )
 blend_point_0/pos = 1.0
-blend_point_1/node = SubResource( 20 )
+blend_point_1/node = SubResource( 18 )
 blend_point_1/pos = -1.0
 
-[sub_resource type="AnimationNodeAnimation" id=22]
+[sub_resource type="AnimationNodeAnimation" id=20]
 animation = "Run"
 
-[sub_resource type="AnimationNodeTimeScale" id=23]
+[sub_resource type="AnimationNodeTimeScale" id=21]
 
-[sub_resource type="AnimationNodeBlend2" id=24]
+[sub_resource type="AnimationNodeBlend2" id=22]
 
-[sub_resource type="AnimationNodeAnimation" id=25]
+[sub_resource type="AnimationNodeAnimation" id=23]
 animation = "Stop"
 
-[sub_resource type="AnimationNodeBlendTree" id=26]
+[sub_resource type="AnimationNodeBlendTree" id=24]
 graph_offset = Vector2( 157.903, -155.441 )
-nodes/Add2/node = SubResource( 17 )
+nodes/Add2/node = SubResource( 15 )
 nodes/Add2/position = Vector2( 670, 110 )
-"nodes/Add2 2/node" = SubResource( 16 )
+"nodes/Add2 2/node" = SubResource( 14 )
 "nodes/Add2 2/position" = Vector2( 910, 80 )
-nodes/Animation/node = SubResource( 18 )
+nodes/Animation/node = SubResource( 16 )
 nodes/Animation/position = Vector2( 620, -50 )
-nodes/Facing/node = SubResource( 21 )
+nodes/Facing/node = SubResource( 19 )
 nodes/Facing/position = Vector2( 350, 60 )
-nodes/Run/node = SubResource( 22 )
+nodes/Run/node = SubResource( 20 )
 nodes/Run/position = Vector2( 150, 360 )
-nodes/RunSpeed/node = SubResource( 23 )
+nodes/RunSpeed/node = SubResource( 21 )
 nodes/RunSpeed/position = Vector2( 310, 340 )
-nodes/Running/node = SubResource( 24 )
+nodes/Running/node = SubResource( 22 )
 nodes/Running/position = Vector2( 480, 240 )
-nodes/Stop/node = SubResource( 25 )
+nodes/Stop/node = SubResource( 23 )
 nodes/Stop/position = Vector2( 150, 240 )
 nodes/output/position = Vector2( 1340, 80 )
-node_connections = [ "output", 0, "Add2 2", "Add2 2", 0, "Animation", "Add2 2", 1, "Add2", "Add2", 0, "Facing", "Add2", 1, "Running", "Running", 0, "Stop", "Running", 1, "RunSpeed", "RunSpeed", 0, "Run" ]
+node_connections = [ "output", 0, "Add2 2", "Add2", 0, "Facing", "Add2", 1, "Running", "Add2 2", 0, "Animation", "Add2 2", 1, "Add2", "RunSpeed", 0, "Run", "Running", 0, "Stop", "Running", 1, "RunSpeed" ]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=25]
+xfade_time = 1.0
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=26]
+xfade_time = 1.0
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=27]
-xfade_time = 1.0
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=28]
-xfade_time = 1.0
 
-[sub_resource type="AnimationNodeStateMachineTransition" id=34]
+[sub_resource type="AnimationNodeStateMachineTransition" id=29]
 
-[sub_resource type="AnimationNodeStateMachineTransition" id=35]
-
-[sub_resource type="AnimationNodeStateMachineTransition" id=36]
-
-[sub_resource type="AnimationNodeStateMachine" id=6]
-states/DrivingMode/node = SubResource( 9 )
+[sub_resource type="AnimationNodeStateMachine" id=30]
+states/DrivingMode/node = SubResource( 11 )
 states/DrivingMode/position = Vector2( 893, 134.5 )
-states/StopWaiting/node = SubResource( 32 )
+states/StopWaiting/node = SubResource( 12 )
 states/StopWaiting/position = Vector2( 1124, -54.75 )
-states/Waiting/node = SubResource( 33 )
+states/Waiting/node = SubResource( 13 )
 states/Waiting/position = Vector2( 1124.5, -133 )
-states/WalkingMode/node = SubResource( 26 )
+states/WalkingMode/node = SubResource( 24 )
 states/WalkingMode/position = Vector2( 716, -73 )
-transitions = [ "WalkingMode", "DrivingMode", SubResource( 27 ), "DrivingMode", "WalkingMode", SubResource( 28 ), "WalkingMode", "Waiting", SubResource( 34 ), "Waiting", "StopWaiting", SubResource( 35 ), "StopWaiting", "WalkingMode", SubResource( 36 ) ]
+transitions = [ "WalkingMode", "DrivingMode", SubResource( 25 ), "DrivingMode", "WalkingMode", SubResource( 26 ), "WalkingMode", "Waiting", SubResource( 27 ), "Waiting", "StopWaiting", SubResource( 28 ), "StopWaiting", "WalkingMode", SubResource( 29 ) ]
 start_node = "WalkingMode"
 graph_offset = Vector2( 464, -203 )
 
-[sub_resource type="AnimationNodeStateMachinePlayback" id=7]
+[sub_resource type="AnimationNodeStateMachinePlayback" id=31]
 
-[sub_resource type="RectangleShape2D" id=13]
+[sub_resource type="RectangleShape2D" id=32]
 
-[node name="Player" type="KinematicBody2D"]
+[node name="Player" type="KinematicBody2D" groups=[
+"players",
+]]
 collision_layer = 2
 collision_mask = 3
 script = ExtResource( 2 )
@@ -424,27 +423,27 @@ frame = 1
 
 [node name="Waiting" type="Sprite" parent="."]
 visible = false
-texture = SubResource( 29 )
+texture = SubResource( 1 )
 region_rect = Rect2( 0, 0, 16, 16 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 visible = false
 position = Vector2( 0, 3.51166 )
-shape = SubResource( 3 )
+shape = SubResource( 2 )
 
 [node name="Camera2D" type="Camera2D" parent="."]
 rotating = true
 zoom = Vector2( 0.25, 0.25 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/FaceLeft = SubResource( 14 )
-anims/FaceRight = SubResource( 15 )
-anims/HelmCamera = SubResource( 8 )
-anims/InsideCamera = SubResource( 5 )
-anims/Run = SubResource( 2 )
-anims/Stop = SubResource( 4 )
-anims/StopWaiting = SubResource( 30 )
-anims/Waiting = SubResource( 31 )
+anims/FaceLeft = SubResource( 3 )
+anims/FaceRight = SubResource( 4 )
+anims/HelmCamera = SubResource( 5 )
+anims/InsideCamera = SubResource( 6 )
+anims/Run = SubResource( 7 )
+anims/Stop = SubResource( 8 )
+anims/StopWaiting = SubResource( 9 )
+anims/Waiting = SubResource( 10 )
 
 [node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource( 3 )
@@ -452,10 +451,10 @@ volume_db = -12.0412
 pitch_scale = 0.5
 
 [node name="AnimationTree" type="AnimationTree" parent="."]
-tree_root = SubResource( 6 )
+tree_root = SubResource( 30 )
 anim_player = NodePath("../AnimationPlayer")
 active = true
-parameters/playback = SubResource( 7 )
+parameters/playback = SubResource( 31 )
 parameters/WalkingMode/Add2/add_amount = 0.5
 "parameters/WalkingMode/Add2 2/add_amount" = 0.5
 parameters/WalkingMode/Facing/blend_position = -1.0
@@ -471,7 +470,7 @@ collision_mask = 128
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HandZone/Hand"]
 visible = false
 position = Vector2( -12, 0 )
-shape = SubResource( 13 )
+shape = SubResource( 32 )
 
 [node name="Attach" type="Node2D" parent="HandZone"]
 position = Vector2( -4, 2 )

@@ -33,13 +33,7 @@ var damages = {}
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	var me = Player.instance()
-	me.local = true
-	me.submarine = self
-	$Players.call_deferred("add_child", me)
-	
-#	apply_central_impulse(Vector2.UP * speed / 15)
-	pass # Replace with function body.
+	DataManager.set_player_manager(self)
 
 func _integrate_forces(state):
 	var hits = {}
@@ -171,3 +165,16 @@ func _cleanup_damage(pos):
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass
+
+##### This is the implementation of player manager
+func add_player(name, colour, network_owner, pos):
+	# XXX For resumption, we should lookup by name and reassign network owner
+	var p = Player.instance()
+	p.set_network_master(network_owner)
+	p.setColor(colour)
+	p.position = pos
+	p.player_name = name
+	p.local = get_tree().get_network_unique_id() == network_owner
+	p.name = String(network_owner)
+	p.submarine = self
+	$Players.add_child(p)

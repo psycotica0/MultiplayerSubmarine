@@ -2,6 +2,15 @@ extends KinematicBody2D
 
 class_name Player
 
+enum PColour {
+	Purple,
+	Black,
+	Blue,
+	Brown,
+	Green,
+	Orange
+}
+
 signal waiting_done()
 
 # Controls if this player is the local player or not
@@ -14,6 +23,10 @@ var submarine
 
 var hovered_item
 var held_item
+
+# This is not the node name, but the username of the player who's playing this
+var player_name
+var colour
 
 var current_room setget ,_get_current_room
 
@@ -56,6 +69,10 @@ func change_state(new_state):
 			$AnimationTree["parameters/playback"].travel("DrivingMode")
 		STATE.WAITING:
 			$AnimationTree["parameters/playback"].travel("Waiting")
+
+puppet func mimic_position(pos):
+	global_position = pos
+	pass
 	
 func process_moving(_delta):
 	if Input.is_action_just_pressed("ui_accept") or Input.is_action_just_pressed("ui_select"):
@@ -93,6 +110,7 @@ func process_moving(_delta):
 		if Input.is_action_pressed("walk"):
 			effective_speed = 0.5
 		var _c = move_and_collide(velocity.normalized().rotated(global_rotation) * speed * effective_speed, false)
+		rpc_unreliable("mimic_position", global_position)
 		if velocity.x > 0:
 			$AnimationTree["parameters/WalkingMode/Facing/blend_position"] = 1
 		elif velocity.x < 0:
@@ -157,6 +175,22 @@ func detach(item):
 func item_layer(mask):
 	$HandZone/Hand.collision_mask = mask
 
+func setColor(pcolor):
+	match pcolor:
+		PColour.Purple:
+			$Sprite.texture = preload("res://Assets/Players/purple.png")
+		PColour.Blue:
+			$Sprite.texture = preload("res://Assets/Players/blue.png")
+		PColour.Black:
+			$Sprite.texture = preload("res://Assets/Players/black.png")
+		PColour.Brown:
+			$Sprite.texture = preload("res://Assets/Players/brown.png")
+		PColour.Green:
+			$Sprite.texture = preload("res://Assets/Players/green.png")
+		PColour.Orange:
+			$Sprite.texture = preload("res://Assets/Players/orange.png")
+	colour = pcolor
+
 func _on_Hand_body_entered(body : Node2D):
 	if do_hover(body):
 		if hovered_item:
@@ -185,3 +219,15 @@ func wait():
 func _on_WaitTimer_timeout():
 	change_state(STATE.MOVING)
 	emit_signal("waiting_done")
+
+# This is called by the DataManager
+func snapshot():
+	var player_state = {
+		"name": player_name,
+		"colour": colour,
+		"state": 0,
+		"pos": position,
+		"network_owner": get_network_master()
+	}
+	# TODO: Held Item
+	return player_state

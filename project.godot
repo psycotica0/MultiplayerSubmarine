@@ -24,6 +24,10 @@ config/name="MultiplayerSubmarine"
 run/main_scene="res://Launcher.tscn"
 config/icon="res://icon.png"
 
+[autoload]
+
+DataManager="*res://DataManager.gd"
+
 [display]
 
 window/size/width=1920
