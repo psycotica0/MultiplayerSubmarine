@@ -46,6 +46,9 @@ func _ready():
 		$HandZone/Hand.monitorable = false
 		$HandZone/Hand.monitoring = false
 	change_state(STATE.MOVING)
+	
+	for param in ["WalkingMode/Running/blend_amount", "WalkingMode/Facing/blend_position", "WalkingMode/RunSpeed/scale"]:
+		$AnimationTree.rset_config("parameters/" + param, MultiplayerAPI.RPC_MODE_REMOTESYNC)
 
 func _physics_process(delta):
 	if not local:
@@ -104,7 +107,7 @@ func process_moving(_delta):
 			velocity += action_direction[dir]
 	
 	if velocity != Vector2.ZERO:
-		$AnimationTree["parameters/WalkingMode/Running/blend_amount"] = 1
+		$AnimationTree.rset("parameters/WalkingMode/Running/blend_amount", 1)
 		# No delta because of the latch, we only move one frame
 		var effective_speed = 1.0
 		if Input.is_action_pressed("walk"):
@@ -112,13 +115,13 @@ func process_moving(_delta):
 		var _c = move_and_collide(velocity.normalized().rotated(global_rotation) * speed * effective_speed, false)
 		rpc_unreliable("mimic_position", global_position)
 		if velocity.x > 0:
-			$AnimationTree["parameters/WalkingMode/Facing/blend_position"] = 1
+			$AnimationTree.rset("parameters/WalkingMode/Facing/blend_position", 1)
 		elif velocity.x < 0:
-			$AnimationTree["parameters/WalkingMode/Facing/blend_position"] = -1
+			$AnimationTree.rset("parameters/WalkingMode/Facing/blend_position", -1)
 		
 		move_latch = true
 	else:
-		$AnimationTree["parameters/WalkingMode/Running/blend_amount"] = 0
+		$AnimationTree.rset("parameters/WalkingMode/Running/blend_amount", 0)
 
 func process_driving(_delta):
 	if Input.is_action_just_pressed("ui_up"):
@@ -207,7 +210,7 @@ func _on_Hand_body_exited(body):
 	#      thing to hover
 
 func _on_RoomDetector_room_density_changed(density):
-	$AnimationTree["parameters/WalkingMode/RunSpeed/scale"] = lerp(1.0, 0.25, density)
+	$AnimationTree.rset("parameters/WalkingMode/RunSpeed/scale", lerp(1.0, 0.25, density))
 
 func _get_current_room():
 	return $RoomDetector.current_room
