@@ -6,7 +6,8 @@ const SUCK_RATE = 80
 var original_parent
 
 func _ready():
-	original_parent = get_parent()
+	if not original_parent:
+		original_parent = get_parent()
 
 func interact(player):
 	player.take(self)

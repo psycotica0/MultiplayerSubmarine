@@ -5,6 +5,10 @@ var used_up = false
 # I store this so I get dropped I got back to whatever layout I was in before
 var original_parent
 
+func _ready():
+	if not original_parent:
+		original_parent = get_parent()
+
 func interact(player):
 	player.take(self)
 

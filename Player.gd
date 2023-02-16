@@ -76,20 +76,30 @@ func change_state(new_state):
 puppet func mimic_position(pos):
 	global_position = pos
 	pass
+
+remotesync func use_item(hovered_path):
+	var hover_item
+	if hovered_path:
+		hover_item = get_node(hovered_path)
+		
+	if hover_item and hover_item.has_method("interact"):
+		if held_item and held_item.has_method("use_on"):
+			held_item.use_on(self, hover_item)
+		else:
+			hover_item.interact(self)
+	else:
+		if held_item and held_item.has_method("use_on"):
+			held_item.use_on(self, null)
 	
 func process_moving(_delta):
 	if Input.is_action_just_pressed("ui_accept") or Input.is_action_just_pressed("ui_select"):
-		if hovered_item and hovered_item.has_method("interact"):
-			if held_item and held_item.has_method("use_on"):
-				held_item.use_on(self, hovered_item)
-			else:
-				hovered_item.interact(self)
-		else:
-			if held_item and held_item.has_method("use_on"):
-				held_item.use_on(self, null)
+		var hovered_path
+		if hovered_item:
+			hovered_path = hovered_item.get_path()
+		rpc("use_item", hovered_path)
 	
 	if Input.is_action_just_pressed("drop_item"):
-		drop()
+		rpc("drop")
 	
 	if move_latch:
 		return
@@ -135,7 +145,7 @@ func process_driving(_delta):
 		submarine.move_helm(-1)
 	
 	if Input.is_action_just_pressed("ui_cancel") or Input.is_action_just_pressed("ui_accept") or Input.is_action_just_pressed("ui_select") or Input.is_action_just_pressed("drop_item"):
-		drop()
+		rpc("drop")
 		change_state(STATE.MOVING)
 
 func reset_move_latch():
@@ -160,7 +170,7 @@ func take(item):
 	if item.has_method("taken"):
 		item.taken(self)
 
-func drop():
+remotesync func drop():
 	if held_item:
 		if held_item.has_method("dropped"):
 			held_item.dropped(self)
@@ -232,5 +242,11 @@ func snapshot():
 		"pos": position,
 		"network_owner": get_network_master()
 	}
-	# TODO: Held Item
+	
+	if held_item:
+		player_state["held_item"] = {
+			"type": held_item.filename,
+			"name": held_item.name
+		}
+
 	return player_state

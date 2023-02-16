@@ -34,6 +34,7 @@ var damages = {}
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	DataManager.set_player_manager(self)
+	DataManager.set_item_manager(self)
 
 func _integrate_forces(state):
 	var hits = {}
@@ -178,3 +179,35 @@ func add_player(name, colour, network_owner, pos):
 	p.name = String(network_owner)
 	p.submarine = self
 	$Players.add_child(p)
+
+func get_players():
+	return $Players.get_children()
+
+func find_player(name):
+	for player in get_players():
+		if player.player_name == name:
+			return player
+
+func clear_players():
+	for player in get_players():
+		$Players.remove_child(player)
+		player.queue_free()
+
+##### This is the implementation of item manager
+func item_layer():
+	return $Items
+
+func get_items():
+	return $Items.get_children()
+
+func clear_items():
+	for item in get_items():
+		# queue_free is deferred, but I need these gone before I sync
+		$Items.remove_child(item)
+		item.queue_free()
+
+func add_item(name, type, pos):
+	var p = load(type).instance()
+	p.name = name
+	p.position = pos
+	$Items.add_child(p, true)

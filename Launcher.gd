@@ -1,6 +1,8 @@
 extends Node2D
 
 func _ready():
+	randomize()
+
 	var arguments = {}
 	for argument in OS.get_cmdline_args():
 		if argument.find("=") > -1:
