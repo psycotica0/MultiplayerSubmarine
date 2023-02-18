@@ -33,3 +33,10 @@ func _set_level(new_level):
 			$AnimationPlayer.play("Level2")
 		_:
 			$AnimationPlayer.play("Level3")
+
+func snapshot():
+	return {
+		"name": name,
+		"pos": position,
+		"level": level
+	}

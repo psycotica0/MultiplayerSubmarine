@@ -35,9 +35,15 @@ var damages = {}
 func _ready():
 	DataManager.set_player_manager(self)
 	DataManager.set_item_manager(self)
+	DataManager.set_damage_manager(self)
 
 func _integrate_forces(state):
 	var hits = {}
+	
+	# The rest of this is about computing collisions, but we don't do that on clients.
+	# Everyone just puppets the collisions of the host
+	if not DataManager.is_host():
+		return
 		
 	for i in range(0, state.get_contact_count()):
 		if not state.get_contact_collider_object(i).collision_layer & 1:
@@ -69,16 +75,11 @@ func _integrate_forces(state):
 	for pos in hits:
 		if damages.has(pos):
 			if hits[pos] > damages[pos].level:
-				damages[pos].level = hits[pos]
+				DataManager.update_damage(damages[pos].name, hits[pos])
 			else:
-				damages[pos].level += 1
+				DataManager.update_damage(damages[pos].name, damages[pos].level + 1)
 		else:
-			var d = Damage.instance()
-			damages[pos] = d
-			d.connect("tree_exiting", self, "_cleanup_damage", [pos])
-			d.level = hits[pos]
-			d.position = pos
-			$Damage.call_deferred("add_child", d)
+			DataManager.new_damage(hits[pos], pos)
 	
 	prev_angular_velocity = state.angular_velocity
 	prev_linear_velocity = state.linear_velocity
@@ -211,3 +212,24 @@ func add_item(name, type, pos):
 	p.name = name
 	p.position = pos
 	$Items.add_child(p, true)
+
+##### This is the implementation of damage manager
+func add_damage(name, level, pos):
+	var d = Damage.instance()
+	damages[pos] = d
+	d.name = name
+	d.connect("tree_exiting", self, "_cleanup_damage", [pos])
+	d.level = level
+	d.position = pos
+	$Damage.call_deferred("add_child", d, true)
+
+func clear_damages():
+	for damage in $Damage.get_children():
+		$Damage.remove_child(damage)
+		damage.queue_free()
+
+func update_damage(name, level):
+	$Damage.get_node(name).level = level
+
+func get_damages():
+	return $Damage.get_children()
