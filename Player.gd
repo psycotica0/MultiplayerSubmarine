@@ -74,8 +74,7 @@ func change_state(new_state):
 			$AnimationTree["parameters/playback"].travel("Waiting")
 
 puppet func mimic_position(pos):
-	global_position = pos
-	pass
+	position = pos
 
 remotesync func use_item(hovered_path):
 	var hover_item
@@ -123,7 +122,7 @@ func process_moving(_delta):
 		if Input.is_action_pressed("walk"):
 			effective_speed = 0.5
 		var _c = move_and_collide(velocity.normalized().rotated(global_rotation) * speed * effective_speed, false)
-		rpc_unreliable("mimic_position", global_position)
+		rpc_unreliable("mimic_position", position)
 		if velocity.x > 0:
 			$AnimationTree.rset("parameters/WalkingMode/Facing/blend_position", 1)
 		elif velocity.x < 0:
