@@ -172,12 +172,19 @@ func _physics_process(delta):
 	prev_left_pos = left_pos
 	prev_right_pos = right_pos
 
-func increase_throttle(amount):
+master func increase_throttle(amount):
 	current_throttle = clamp(current_throttle + amount, -2, 4)
+	rpc("pilot_updated", current_throttle, current_helm)
 	compute_power()
 
-func move_helm(amount):
+master func move_helm(amount):
 	current_helm = clamp(current_helm + amount, -4, 4)
+	rpc("pilot_updated", current_throttle, current_helm)
+	compute_power()
+
+puppet func pilot_updated(throttle, helm):
+	current_throttle = throttle
+	current_helm = helm
 	compute_power()
 
 func compute_power():
@@ -297,11 +304,14 @@ func snapshot():
 		})
 	
 	return {
+		"helm": current_helm,
+		"throttle": current_throttle,
 		"doors": doors,
 		"rooms": rooms
 	}
 
 func load_snapshot(snapshot):
+	pilot_updated(snapshot["throttle"], snapshot["helm"])
 	for item in snapshot["doors"]:
 		set_door_state(item["name"], item["opened"])
 	

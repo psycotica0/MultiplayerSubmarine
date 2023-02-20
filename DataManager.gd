@@ -43,6 +43,8 @@ var ship_manager
 #     rooms: Info on each room
 #       name: Unique name
 #       volume: Water level of the room
+#     helm: Current helm bearing
+#     throttle: Current throttle setting
 
 func is_host():
 	return get_tree().is_network_server()

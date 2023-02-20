@@ -134,14 +134,14 @@ func process_moving(_delta):
 
 func process_driving(_delta):
 	if Input.is_action_just_pressed("ui_up"):
-		submarine.increase_throttle(1)
+		submarine.rpc("increase_throttle", 1)
 	if Input.is_action_just_pressed("ui_down"):
-		submarine.increase_throttle(-1)
+		submarine.rpc("increase_throttle", -1)
 	
 	if Input.is_action_just_pressed("ui_right"):
-		submarine.move_helm(1)
+		submarine.rpc("move_helm", 1)
 	if Input.is_action_just_pressed("ui_left"):
-		submarine.move_helm(-1)
+		submarine.rpc("move_helm", -1)
 	
 	if Input.is_action_just_pressed("ui_cancel") or Input.is_action_just_pressed("ui_accept") or Input.is_action_just_pressed("ui_select") or Input.is_action_just_pressed("drop_item"):
 		rpc("drop")
