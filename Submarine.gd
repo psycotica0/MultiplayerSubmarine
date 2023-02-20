@@ -46,21 +46,42 @@ const dmg_level3 = 2000 * 2000
 
 var damages = {}
 
+# This variable holds some physics properties from the host periodically.
+# In between these updates it's empty
+var remote_physics
+
+# This variable holds whether we are ready to send a physics update as the host
+var should_send_physics = false
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	DataManager.set_player_manager(self)
 	DataManager.set_item_manager(self)
 	DataManager.set_damage_manager(self)
 	DataManager.set_ship_manager(self)
+	
+	if DataManager.is_host():
+		$SyncTimer.start()
 
 func _integrate_forces(state):
 	var hits = {}
 	
-	# The rest of this is about computing collisions, but we don't do that on clients.
-	# Everyone just puppets the collisions of the host
 	if not DataManager.is_host():
-		return
+		# We have a snapshot from the host we should attempt to mirror
+		if remote_physics:
+			state.transform = remote_physics["transform"]
+			state.linear_velocity = remote_physics["linear"]
+			state.angular_velocity = remote_physics["angular"]
+			remote_physics = null
 		
+		# The rest of this is about computing collisions, but we don't do that on clients.
+		# Everyone just puppets the collisions of the host
+		return
+	
+	if should_send_physics:
+		rpc_unreliable("load_physics_snapshot", physics_snapshot(state))
+		should_send_physics = false
+	
 	for i in range(0, state.get_contact_count()):
 		if not state.get_contact_collider_object(i).collision_layer & 1:
 			# For these purposes, only care about ship-level collisions.
@@ -184,6 +205,9 @@ func _cleanup_damage(pos):
 #func _process(delta):
 #	pass
 
+func _on_SyncTimer_timeout():
+	should_send_physics = true
+
 ##### This is the implementation of player manager
 func add_player(name, colour, network_owner, pos):
 	# XXX For resumption, we should lookup by name and reassign network owner
@@ -283,3 +307,13 @@ func load_snapshot(snapshot):
 	
 	for item in snapshot["rooms"]:
 		set_room_volume(item["name"], item["volume"])
+
+func physics_snapshot(state : Physics2DDirectBodyState):
+	return {
+		"transform": state.transform,
+		"angular": state.angular_velocity,
+		"linear": state.linear_velocity
+	}
+
+puppet func load_physics_snapshot(snapshot):
+	remote_physics = snapshot

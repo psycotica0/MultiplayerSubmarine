@@ -399,3 +399,6 @@ position = Vector2( -240, 0 )
 
 [node name="RightBrake" type="Node2D" parent="."]
 position = Vector2( 240, 0 )
+
+[node name="SyncTimer" type="Timer" parent="."]
+[connection signal="timeout" from="SyncTimer" to="." method="_on_SyncTimer_timeout"]
