@@ -41,6 +41,11 @@ func assert_state():
 	else:
 		close()
 
+func set_state(be_open):
+	if (not(is_open) and be_open) or (is_open and not(be_open)):
+		is_open = be_open
+		assert_state()
+
 func _on_room_changed(_old_room, _new_room):
 	if $BottomRoom.current_room and $TopRoom.current_room:
 		assert_state()

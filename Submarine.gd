@@ -13,6 +13,21 @@ export var brake_power = 2000
 export var max_thrust_angle = 60
 export var drag = 100
 
+const Doors = {
+	"cockpit": @"CockpitDoor",
+	"engine": @"EngineDoor",
+	"left": @"LeftDoor",
+	"right": @"RightDoor"
+}
+
+const Rooms = {
+	"cockpit": @"Cockpit",
+	"engine": @"EngineRoom",
+	"left": @"LeftRoom",
+	"right": @"RightRoom",
+	"hallway": @"Hallway"
+}
+
 var prev_left_pos
 var prev_right_pos
 
@@ -36,6 +51,7 @@ func _ready():
 	DataManager.set_player_manager(self)
 	DataManager.set_item_manager(self)
 	DataManager.set_damage_manager(self)
+	DataManager.set_ship_manager(self)
 
 func _integrate_forces(state):
 	var hits = {}
@@ -233,3 +249,37 @@ func update_damage(name, level):
 
 func get_damages():
 	return $Damage.get_children()
+
+##### This is the implementation of ship manager
+func set_door_state(name, is_open):
+	get_node(Doors[name]).set_state(is_open)
+
+func set_room_volume(name, volume):
+	get_node(Rooms[name]).current_volume = volume
+
+func snapshot():
+	var doors = []
+	for key in Doors:
+		doors.append({
+			"name": key,
+			"opened": get_node(Doors[key]).is_open
+		})
+	
+	var rooms = []
+	for key in Rooms:
+		rooms.append({
+			"name": key,
+			"volume": get_node(Rooms[key]).current_volume
+		})
+	
+	return {
+		"doors": doors,
+		"rooms": rooms
+	}
+
+func load_snapshot(snapshot):
+	for item in snapshot["doors"]:
+		set_door_state(item["name"], item["opened"])
+	
+	for item in snapshot["rooms"]:
+		set_room_volume(item["name"], item["volume"])

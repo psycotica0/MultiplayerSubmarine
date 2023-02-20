@@ -14,6 +14,9 @@ var item_manager
 # This requires the methods add_damage, clear_damage, update_damage, get_damages
 var damage_manager
 
+# This requires the methods set_door_state, set_room_volume, snapshot, load_snapshot
+var ship_manager
+
 # GameState is expected to be a dictionary with the following keys:
 #   version: A string so we can detect mismatches
 #   players: An array containing dicts that look like:
@@ -33,6 +36,13 @@ var damage_manager
 #     name: Unique name
 #     level: How much damage is there
 #     pos: Position of the damage
+#   ship: Information about the ship
+#     doors: Info on each door
+#       name: Unique name
+#       opened: true for open, false for closed
+#     rooms: Info on each room
+#       name: Unique name
+#       volume: Water level of the room
 
 func is_host():
 	return get_tree().is_network_server()
@@ -63,6 +73,8 @@ func snapshot():
 	for damage in damage_manager.get_damages():
 		state["damages"].append(damage.snapshot())
 	
+	state["ship"] = ship_manager.snapshot()
+	
 	return state
 
 remote func load_snapshot(state):
@@ -85,6 +97,8 @@ remote func load_snapshot(state):
 	for damage in state["damages"]:
 		add_damage(damage["name"], damage["level"], damage["pos"])
 	
+	ship_manager.load_snapshot(state["ship"])
+	
 	rpc("player_ready", player_name, player_colour, Vector2(0,0))
 
 func set_player_manager(m):
@@ -97,6 +111,9 @@ func set_item_manager(m):
 
 func set_damage_manager(m):
 	damage_manager = m
+
+func set_ship_manager(m):
+	ship_manager = m
 
 func _network_peer_connected(peer):
 	var s = snapshot()
