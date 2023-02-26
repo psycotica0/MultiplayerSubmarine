@@ -318,11 +318,20 @@ func snapshot():
 			"volume": get_node(Rooms[key]).current_volume
 		})
 	
+	var helm_station = {
+		"current_user": null
+	}
+	if $Helm.current_user:
+		helm_station["current_user"] = $Helm.current_user.player_name
+	
 	return {
 		"helm": current_helm,
 		"throttle": current_throttle,
 		"doors": doors,
-		"rooms": rooms
+		"rooms": rooms,
+		"stations": {
+			"helm" : helm_station
+		}
 	}
 
 func load_snapshot(snapshot):
@@ -332,6 +341,13 @@ func load_snapshot(snapshot):
 	
 	for item in snapshot["rooms"]:
 		set_room_volume(item["name"], item["volume"])
+	
+	var helm_user = snapshot["stations"]["helm"]["current_user"]
+	if helm_user:
+		DataManager.player_manager.find_player(helm_user).take($Helm)
+	else:
+		# Just in case the resync happens after we're already playing
+		$Helm.dropped(null)
 
 func physics_snapshot(state : Physics2DDirectBodyState):
 	return {

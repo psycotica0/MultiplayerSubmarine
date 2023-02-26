@@ -23,6 +23,7 @@ var submarine
 
 var hovered_item
 var held_item
+var item_attached = false
 
 # This is not the node name, but the username of the player who's playing this
 var player_name
@@ -145,7 +146,6 @@ func process_driving(_delta):
 	
 	if Input.is_action_just_pressed("ui_cancel") or Input.is_action_just_pressed("ui_accept") or Input.is_action_just_pressed("ui_select") or Input.is_action_just_pressed("drop_item"):
 		rpc("drop")
-		change_state(STATE.MOVING)
 
 func reset_move_latch():
 	move_latch = false
@@ -180,9 +180,11 @@ func attach(item):
 	if item.get_parent():
 		item.get_parent().remove_child(item)
 	$HandZone/Attach.add_child(item)
+	item_attached = true
 
 func detach(item):
 	$HandZone/Attach.remove_child(item)
+	item_attached = false
 
 func item_layer(mask):
 	$HandZone/Hand.collision_mask = mask
@@ -255,7 +257,7 @@ func snapshot():
 		"network_owner": get_network_master()
 	}
 	
-	if held_item:
+	if held_item and item_attached:
 		player_state["held_item"] = {
 			"type": held_item.filename,
 			"name": held_item.name
