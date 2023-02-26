@@ -1,4 +1,4 @@
-[gd_scene load_steps=38 format=2]
+[gd_scene load_steps=46 format=2]
 
 [ext_resource path="res://Assets/Players/purple.png" type="Texture" id=1]
 [ext_resource path="res://Player.gd" type="Script" id=2]
@@ -197,6 +197,35 @@ tracks/2/keys = {
 "values": [ Vector2( 0, 0 ) ]
 }
 
+[sub_resource type="Animation" id=33]
+resource_name = "Mourn"
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 1 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 0.486275, 0.486275, 0.486275, 1 ), Color( 0, 0, 0, 1 ) ]
+}
+tracks/1/type = "method"
+tracks/1/path = NodePath(".")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 1 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "fully_gone"
+} ]
+}
+
 [sub_resource type="Animation" id=7]
 length = 0.3
 loop = true
@@ -329,7 +358,15 @@ animation = "Waiting"
 
 [sub_resource type="AnimationNodeAdd2" id=14]
 
+[sub_resource type="AnimationNodeAdd2" id=34]
+
 [sub_resource type="AnimationNodeAdd2" id=15]
+
+[sub_resource type="AnimationNodeAnimation" id=35]
+animation = "Mourn"
+
+[sub_resource type="AnimationNodeAnimation" id=36]
+animation = "Mourn"
 
 [sub_resource type="AnimationNodeAnimation" id=16]
 animation = "InsideCamera"
@@ -346,6 +383,10 @@ blend_point_0/pos = 1.0
 blend_point_1/node = SubResource( 18 )
 blend_point_1/pos = -1.0
 
+[sub_resource type="AnimationNodeOneShot" id=37]
+fadein_time = 0.0
+fadeout_time = 0.0
+
 [sub_resource type="AnimationNodeAnimation" id=20]
 animation = "Run"
 
@@ -353,29 +394,49 @@ animation = "Run"
 
 [sub_resource type="AnimationNodeBlend2" id=22]
 
+[sub_resource type="AnimationNodeTimeSeek" id=38]
+
 [sub_resource type="AnimationNodeAnimation" id=23]
 animation = "Stop"
 
+[sub_resource type="AnimationNodeTimeScale" id=39]
+
+[sub_resource type="AnimationNodeTimeScale" id=40]
+
 [sub_resource type="AnimationNodeBlendTree" id=24]
-graph_offset = Vector2( 157.903, -155.441 )
+graph_offset = Vector2( 548.491, -224.666 )
 nodes/Add2/node = SubResource( 15 )
 nodes/Add2/position = Vector2( 670, 110 )
 "nodes/Add2 2/node" = SubResource( 14 )
 "nodes/Add2 2/position" = Vector2( 910, 80 )
+"nodes/Add2 3/node" = SubResource( 34 )
+"nodes/Add2 3/position" = Vector2( 1410, 20 )
 nodes/Animation/node = SubResource( 16 )
 nodes/Animation/position = Vector2( 620, -50 )
+"nodes/Animation 2/node" = SubResource( 35 )
+"nodes/Animation 2/position" = Vector2( 820, -130 )
+"nodes/Animation 3/node" = SubResource( 36 )
+"nodes/Animation 3/position" = Vector2( 770, -250 )
 nodes/Facing/node = SubResource( 19 )
 nodes/Facing/position = Vector2( 350, 60 )
+nodes/Mourning/node = SubResource( 37 )
+nodes/Mourning/position = Vector2( 1270, -130 )
 nodes/Run/node = SubResource( 20 )
 nodes/Run/position = Vector2( 150, 360 )
 nodes/RunSpeed/node = SubResource( 21 )
 nodes/RunSpeed/position = Vector2( 310, 340 )
 nodes/Running/node = SubResource( 22 )
 nodes/Running/position = Vector2( 480, 240 )
+nodes/Seek/node = SubResource( 38 )
+nodes/Seek/position = Vector2( 1100, -260 )
 nodes/Stop/node = SubResource( 23 )
 nodes/Stop/position = Vector2( 150, 240 )
-nodes/output/position = Vector2( 1340, 80 )
-node_connections = [ "output", 0, "Add2 2", "Add2", 0, "Facing", "Add2", 1, "Running", "Add2 2", 0, "Animation", "Add2 2", 1, "Add2", "RunSpeed", 0, "Run", "Running", 0, "Stop", "Running", 1, "RunSpeed" ]
+nodes/TimeScale/node = SubResource( 40 )
+nodes/TimeScale/position = Vector2( 1000, -110 )
+"nodes/TimeScale 2/node" = SubResource( 39 )
+"nodes/TimeScale 2/position" = Vector2( 940, -260 )
+nodes/output/position = Vector2( 1710, 80 )
+node_connections = [ "output", 0, "Add2 3", "Add2", 0, "Facing", "Add2", 1, "Running", "Add2 2", 0, "Animation", "Add2 2", 1, "Add2", "RunSpeed", 0, "Run", "Running", 0, "Stop", "Running", 1, "RunSpeed", "TimeScale", 0, "Animation 2", "Add2 3", 0, "Mourning", "Add2 3", 1, "Add2 2", "Mourning", 0, "Seek", "Mourning", 1, "TimeScale", "Seek", 0, "TimeScale 2", "TimeScale 2", 0, "Animation 3" ]
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=25]
 xfade_time = 1.0
@@ -400,7 +461,7 @@ states/WalkingMode/node = SubResource( 24 )
 states/WalkingMode/position = Vector2( 716, -73 )
 transitions = [ "WalkingMode", "DrivingMode", SubResource( 25 ), "DrivingMode", "WalkingMode", SubResource( 26 ), "WalkingMode", "Waiting", SubResource( 27 ), "Waiting", "StopWaiting", SubResource( 28 ), "StopWaiting", "WalkingMode", SubResource( 29 ) ]
 start_node = "WalkingMode"
-graph_offset = Vector2( 464, -203 )
+graph_offset = Vector2( 464, -169.507 )
 
 [sub_resource type="AnimationNodeStateMachinePlayback" id=31]
 
@@ -440,6 +501,7 @@ anims/FaceLeft = SubResource( 3 )
 anims/FaceRight = SubResource( 4 )
 anims/HelmCamera = SubResource( 5 )
 anims/InsideCamera = SubResource( 6 )
+anims/Mourn = SubResource( 33 )
 anims/Run = SubResource( 7 )
 anims/Stop = SubResource( 8 )
 anims/StopWaiting = SubResource( 9 )
@@ -457,9 +519,14 @@ active = true
 parameters/playback = SubResource( 31 )
 parameters/WalkingMode/Add2/add_amount = 0.5
 "parameters/WalkingMode/Add2 2/add_amount" = 0.5
+"parameters/WalkingMode/Add2 3/add_amount" = 0.5
 parameters/WalkingMode/Facing/blend_position = -1.0
+parameters/WalkingMode/Mourning/active = false
 parameters/WalkingMode/RunSpeed/scale = 1.0
 parameters/WalkingMode/Running/blend_amount = 0.0
+parameters/WalkingMode/Seek/seek_position = -1.0
+parameters/WalkingMode/TimeScale/scale = 0.03
+"parameters/WalkingMode/TimeScale 2/scale" = 0.0
 
 [node name="HandZone" type="Node2D" parent="."]
 

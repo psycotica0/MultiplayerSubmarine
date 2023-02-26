@@ -217,16 +217,24 @@ func _on_SyncTimer_timeout():
 
 ##### This is the implementation of player manager
 func add_player(name, colour, network_owner, pos):
-	# XXX For resumption, we should lookup by name and reassign network owner
-	var p = Player.instance()
-	p.set_network_master(network_owner)
-	p.setColor(colour)
-	p.position = pos
-	p.player_name = name
-	p.local = get_tree().get_network_unique_id() == network_owner
-	p.name = String(network_owner)
-	p.submarine = self
-	$Players.add_child(p)
+	var p = find_player(name)
+	
+	if p:
+		# Allow the new connection to control the existing player
+		p.name = String(network_owner)
+		p.setColor(colour)
+		p.set_network_master(network_owner)
+		p.resurrect()
+	else:
+		p = Player.instance()
+		p.set_network_master(network_owner)
+		p.setColor(colour)
+		p.position = pos
+		p.player_name = name
+		p.local = get_tree().get_network_unique_id() == network_owner
+		p.name = String(network_owner)
+		p.submarine = self
+		$Players.add_child(p)
 
 func get_players():
 	return $Players.get_children()
@@ -236,10 +244,17 @@ func find_player(name):
 		if player.player_name == name:
 			return player
 
+func find_player_by_owner(network_owner):
+	return $Players.get_node(String(network_owner))
+
 func clear_players():
 	for player in get_players():
 		$Players.remove_child(player)
 		player.queue_free()
+
+func mourn_player(player_name):
+	var p = find_player(player_name)
+	p.mourn()
 
 ##### This is the implementation of item manager
 func item_layer():

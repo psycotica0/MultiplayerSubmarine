@@ -203,6 +203,19 @@ func setColor(pcolor):
 			$Sprite.texture = preload("res://Assets/Players/orange.png")
 	colour = pcolor
 
+func mourn():
+	drop()
+	$AnimationTree["parameters/WalkingMode/Mourning/active"] = true
+
+func is_mourning():
+	return $AnimationTree["parameters/WalkingMode/Mourning/active"]
+
+func resurrect():
+	$AnimationTree["parameters/WalkingMode/Mourning/active"] = false
+
+func fully_gone():
+	queue_free()
+
 func _on_Hand_body_entered(body : Node2D):
 	if do_hover(body):
 		if hovered_item:
@@ -237,7 +250,7 @@ func snapshot():
 	var player_state = {
 		"name": player_name,
 		"colour": colour,
-		"state": 0,
+		"active": not is_mourning(),
 		"pos": position,
 		"network_owner": get_network_master()
 	}

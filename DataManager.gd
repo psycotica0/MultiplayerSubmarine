@@ -5,7 +5,7 @@ const VERSION = "0.0.1"
 var player_name : String
 var player_colour
 
-# This requires the methods add_player, mourn_player, remove_player, find_player, get_players, clear_players
+# This requires the methods add_player, mourn_player, remove_player, find_player, find_player_by_owner, get_players, clear_players
 var player_manager
 
 # This requires the methods add_item, add_item_for_player, item_layer, get_items, clear_items
@@ -23,7 +23,7 @@ var ship_manager
 #     name: Player Name string
 #     colour: Int that corresponds to colour enum
 #     network_owner: Int that corresponds to who owns the player
-#     state: 0 for active, 1 for mourning
+#     active: true for active, false for mourning
 #     pos: Vector2 for position
 #     held_item: Present if the user is holding something, looks like
 #       type: The filename of the thing they're holding
@@ -51,8 +51,8 @@ func is_host():
 
 func network_peer_loaded():
 	if is_host():
-		# XXX DISCONNECTED TOO
 		var _x = get_tree().connect("network_peer_connected", self, "_network_peer_connected")
+		var _y = get_tree().connect("network_peer_disconnected", self, "_network_peer_disconnected")
 
 func snapshot():
 	var state = {
@@ -87,9 +87,16 @@ remote func load_snapshot(state):
 	
 	player_manager.clear_players()
 	for player in state["players"]:
-		player_manager.add_player(player["name"], player["colour"], player["network_owner"], player["pos"])
+		var net_owner = player["network_owner"]
+		if player["name"] == player_name:
+			# If I'm already in the game, then I'm taking over this one
+			net_owner = get_tree().get_network_unique_id()
+		
+		player_manager.add_player(player["name"], player["colour"], net_owner, player["pos"])
 		if player.has("held_item"):
 			add_item_to_player(player["held_item"]["name"], player["held_item"]["type"], player["name"])
+		if not player["active"]:
+			mourn_player(player["name"])
 	
 	item_manager.clear_items()
 	for item in state["items"]:
@@ -101,7 +108,7 @@ remote func load_snapshot(state):
 	
 	ship_manager.load_snapshot(state["ship"])
 	
-	rpc("player_ready", player_name, player_colour, Vector2(0,0))
+	rpc("player_ready", player_name, player_colour)
 
 func set_player_manager(m):
 	player_manager = m
@@ -123,8 +130,14 @@ func _network_peer_connected(peer):
 	
 	rpc_id(peer, "load_snapshot", s)
 
-remotesync func player_ready(name, colour, position):
-	player_manager.add_player(name, colour, get_tree().get_rpc_sender_id(), position)
+func _network_peer_disconnected(peer):
+	var p = player_manager.find_player_by_owner(peer)
+	if p:
+		prints("Disconnected", p)
+		rpc("mourn_player", p.player_name)
+
+remotesync func player_ready(name, colour):
+	player_manager.add_player(name, colour, get_tree().get_rpc_sender_id(), Vector2(0,0))
 
 func new_item_to_player(type, player):
 	if player.player_name == player_name:
@@ -140,6 +153,9 @@ remotesync func add_item_to_player(name, type, holding_player_name):
 	# If they drop this later, which layer should it be on
 	p.original_parent = item_manager.item_layer()
 	player.take(p)
+
+remotesync func mourn_player(name):
+	player_manager.mourn_player(name)
 
 func new_damage(level, pos):
 	# Only the host makes damages and then just syncs them out to everyone else
